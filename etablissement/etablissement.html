@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQueue - Choisir l'établissement</title>
+    <link rel="stylesheet" href="../signin/signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container-wide">
+        <div class="header">
+            <div class="logo-mini">
+                <i class="fas fa-layer-group"></i> SmartQueue
+            </div>
+            <h2>Banques disponibles</h2>
+            <p class="subtitle">Trouvez l'agence la plus proche de vous</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="input-wrapper search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher une agence (BIAT, BH...)"
+                    onkeyup="filterList()"> <!--wakt l user ynahi lcuseur al input-->
+            </div>
+
+            <div class="input-wrapper filter-box">
+                <i class="fas fa-location-dot"></i>
+                <select id="locationFilter" onchange="filterList()">
+                    <option value="">Toutes les localisations</option>
+                    <option value="Monastir">Monastir</option>
+                    <option value="Sousse">Sousse</option>
+                    <option value="Tunis">beja</option>
+                    <option value="Tunis">djerba</option>
+                    <option value="Tunis">nabeul</option>
+                    <option value="Tunis">gabes </option>
+                    <option value="Tunis">tozeur</option>
+                    <option value="Tunis">manouba</option>
+                    <option value="Tunis">benzart</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="list-container" id="agencyList">
+            <div class="list-item card" data-name="BIAT" data-location="Monastir">
+                <div class="item-info">
+                    <div class="item-logo">BIAT</div>
+                    <div class="item-details">
+                        <h3>BIAT - Agence Marina</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Monastir, Centre Ville</p>
+                    </div>
+                </div>
+                <button class="btn-select" onclick="confirmBooking('BIAT Marina')">Choisir</button>
+            </div>
+
+            <div class="list-item card" data-name="BH" data-location="Monastir">
+                <div class="item-info">
+                    <div class="item-logo">BH</div>
+                    <div class="item-details">
+                        <h3>BH Bank - Faculté</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Monastir, Zone Univ</p>
+                    </div>
+                </div>
+                <button class="btn-select" onclick="confirmBooking('BH Faculté')">Choisir</button>
+            </div>
+
+            <div class="list-item card" data-name="BIAT" data-location="Sousse">
+                <div class="item-info">
+                    <div class="item-logo">BIAT</div>
+                    <div class="item-details">
+                        <h3>BIAT - Sousse Corniche</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Sousse, Corniche</p>
+                    </div>
+                </div>
+                <button class="btn-select" onclick="confirmBooking('BIAT Sousse')">Choisir</button>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-secondary" onclick="window.history.back()">Retour aux catégories</button>
+        </div>
+    </div>
+<script src="etablissement.js"></script>
+
+</body>
+</html>
