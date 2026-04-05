@@ -11,6 +11,9 @@
 
     <div class="container-wide">
         <div class="header">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            </div>
             <div class="logo-mini">
                 <i class="fas fa-layer-group"></i> <h1>SmartQueue</h1> <!--cette icone vient de la biblio font awesome -->
             </div>
@@ -19,22 +22,22 @@
         </div>
 
         <div class="services-grid">
-            <div class="service-card" onclick="window.location.href='etablissement.html'">
+            <div class="service-card" onclick="window.location.href='../etablissement/etablissement.html'">
                 <div class="service-icon"><i class="fas fa-university"></i></div>
                 <h3>Banque</h3>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='../cinema/cinema.html'">
                 <div class="service-icon"><i class="fas fa-film"></i></div>
                 <h3>Cinéma</h3>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='../resto/resto.html'">
                 <div class="service-icon"><i class="fas fa-utensils"></i></div>
                 <h3>Resto U</h3>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" onclick="window.location.href='../admin/admin.html'">
                 <div class="service-icon"><i class="fas fa-file-invoice"></i></div>
                 <h3>Administration</h3>
             </div>
@@ -44,5 +47,6 @@
             <button class="btn-secondary" onclick="window.history.back()">Retour</button>
         </div>
     </div>
+<script src="../theme.js"></script>
 </body>
 </html>

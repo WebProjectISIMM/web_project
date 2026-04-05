@@ -1,11 +1,37 @@
+:root {
+    --bg-color: #F9F9F0;
+    --header-bg: #ffffff;
+    --card-bg: #ffffff;
+    --card-middle-bg: rgba(240, 240, 240, 0.684);
+    --personne-bg: aliceblue;
+    --btn-bg: rgb(207, 217, 226);
+    --btn-color: black;
+    --text-main: black;
+    --text-muted: grey;
+    --border-color: black;
+}
+
+body.dark-theme {
+    --bg-color: #121212;
+    --header-bg: #1e1e1e;
+    --card-bg: #222222;
+    --card-middle-bg: #2a2a2a;
+    --personne-bg: #333333;
+    --btn-bg: #444444;
+    --btn-color: #ffffff;
+    --text-main: #ffffff;
+    --text-muted: #aaaaaa;
+    --border-color: #555555;
+}
 
 body{  
-    background-color: #F9F9F0;
+    background-color: var(--bg-color);
     margin:0px;
-   
+    color: var(--text-main);
+    transition: background-color 0.3s, color 0.3s;
 }
 header{
-    background-color: #ffffff;
+    background-color: var(--header-bg);
     margin: 0;
     display: flex;
     justify-content: space-between;
@@ -18,35 +44,25 @@ header{
 
 
     align-items:center;
-   
-   
-   
-    
-
-
-
-
+    transition: background-color 0.3s;
 }
 .card {
     border-radius: 20px;
     width: 350px;
     height: auto;
    
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     display:flex;
-    flex-direction: column;  /*hethii mouhmaa blch biha lkol yls9 fib3thou header w middle w bottom mt3 l card*/
+    flex-direction: column;
      gap:5px;
     padding: 25px;
     margin: 20px;
-
+    transition: background-color 0.3s;
 
 }
 .card-header{
     display: flex;
     justify-content: space-between;
-    
-   
-
 }
 .logo{
     width: 50px;
@@ -56,15 +72,11 @@ header{
 .logotext-header{
     display: flex;
     justify-content: center;
-    
-
-
 }
 .loc{
      width: 20px;
     height: 20px;
     border-radius: 20px;
-
 }
 .pers{
     width: 30px;
@@ -79,23 +91,21 @@ header{
 .localisation-identif{
     display: flex;
     padding: 2px;
-
-
 }
 .text-header{
     margin: 10px;
 }
 .color{
-    color: grey;
+    color: var(--text-muted);
 }
 .card-middle{
-    background-color:rgba(240, 240, 240, 0.684);
+    background-color: var(--card-middle-bg);
     border-radius: 25px;
     display: flex;
     justify-content: space-between;
     padding: 10px;
     margin: 10px;
-    
+    transition: background-color 0.3s;
 }
 .numero-gras{
     font-size: 20px;
@@ -105,11 +115,6 @@ header{
     align-items: center;
     text-align: center;
     flex-direction: column;
-
-    /*flex-direction: row (Ligne) : Les éléments se mettent les uns à côté des autres (gauche à droite). C'est le sens de la lecture.
-
-     flex-direction: column (Colonne) : Tu forces les éléments à se mettre les uns en dessous des autres.
-*/
 }
 .text2-middle{
    
@@ -119,33 +124,23 @@ header{
 
 }
 .personnes-file{
-    /*hethii m3b3thhhaa rtblk tnsaa align itemss bch yjik centrerr text */
     display: flex;
     justify-content: center;
     align-items: center;
     
-    
     border-radius: 25px;
-    background-color: aliceblue;
+    background-color: var(--personne-bg);
     height: 45px;
-    
+    transition: background-color 0.3s;
 }
 
 .btn{
     color: red;
     font-weight: bold;
-    
- /* hethomm pour centraliserr le bouton*/
     display: block;    /* Important : permet d'utiliser margin auto */
     margin: 20px auto; /* Centre horizontalement */
-    
-    /*toufaa hnee*/
     background-color:transparent;
-
-
     border:none;
-    
-    
 }
 .btn-header{
     color: red;
@@ -155,33 +150,23 @@ footer{
     padding: 20px ;
     text-align: center;
     padding-left: 0;
-    /* hethomm bch tt7att l footerr fi b93thaa ki tbda l page fr8aa*/
-   
-    
     width: 100%;
     bottom: 0;
-    position: fixed;/*hethi m3neha tsyblha l position mt3ha bch t5liha flexible pour autre changemnt*/
-
+    position: fixed;
 }
 .bout{
     border-radius: 25px;
     height: 20px;
     font-weight: bold;
-    color:black;
-    
-   
-    border: black;
-    background-color: rgb(207, 217, 226);
+    color: var(--btn-color);
+    border: 1px solid var(--border-color);
+    background-color: var(--btn-bg);
     width: fit-content;
     margin-right: 50px;
-    
-
-
-    
-    
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 main{
-    
     padding: 40px 20px;
     display: flex;
     flex-direction: column;

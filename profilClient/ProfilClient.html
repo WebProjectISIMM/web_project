@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet"href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>SmartQueue-Mes files</title>
 </head>
 
     <body>
 
    <header>
-    
         <h5>SmartQueue</h5>
-        <button class="bout">Deconnexion</button>
-    
+        <div style="display:flex; align-items:center; gap: 15px; margin-right: 20px;">
+            <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 20px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            <button class="bout" onclick="window.location.href='../signin/signin.html'" style="margin: 0;">Deconnexion</button>
+        </div>
    </header> 
    <main>
     <h2>Mes files en cours</h2>
@@ -52,7 +54,7 @@
         </div>
         <div class="card-bottom">
             <div class="personnes-file">
-                <img src="images/perso.webp" alt="pers"class="pers"
+                <img src="images/perso.webp" alt="pers" class="pers">
                 <p class="txt">5 personnes avant vous</p>
             </div>
             <button class="btn">Annuler mon ticket</button>
@@ -60,8 +62,8 @@
         </div>
     </div>
 
-    
-    
+    <!-- NOUVEAU TICKET BUTTON ADDED FOR NAVIGATION FLOW -->
+    <button style="border-radius: 20px; background-color: #B2A14E; color: #1A1A1A; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px;" onclick="window.location.href='../services/services.html'">+ Nouveau Ticket</button>
 
    </main>
    
@@ -77,6 +79,7 @@
    </footer>
 
 
+   <script src="../theme.js"></script>
    </body>
     
 

@@ -4,7 +4,24 @@
     --text-main: #1A1A1A;
     --text-muted: #757575;
     --input-bg: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --border-color: #E0E0E0;
+    --border-color-light: #eee;
+    --icon-bg: #FFF9E6;
+    --icon-color: #333;
     --border-radius: 30px;
+}
+
+body.dark-theme {
+    --bg-gradient: linear-gradient(180deg, #1A1A1A 0%, #121212 100%);
+    --text-main: #F5F5F5;
+    --text-muted: #A0AAB2;
+    --input-bg: #2C2C2C;
+    --card-bg: #222222;
+    --border-color: #444444;
+    --border-color-light: #333333;
+    --icon-bg: #332B1A;
+    --icon-color: #ccc;
 }
 
 * {
@@ -21,6 +38,7 @@ body {
     justify-content: center;
     align-items: center;
     color: var(--text-main);
+    transition: background 0.3s, color 0.3s;
 }
 
 .container {
@@ -54,7 +72,7 @@ h2 {
 }
 
 .subtitle {
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 14px;
     margin-bottom: 30px;
 }
@@ -82,7 +100,7 @@ h2 {
 .input-wrapper i {
     position: absolute;
     left: 20px;
-    color: #333;
+    color: var(--icon-color);
 }
 
 .input-wrapper .toggle-password {
@@ -98,12 +116,13 @@ input[type="text"] {
     width: 100%;
     padding: 18px 20px 18px 50px;
     border-radius: var(--border-radius);
-    border: 1px solid #E0E0E0;
+    border: 1px solid var(--border-color);
     background: var(--input-bg);
+    color: var(--text-main);
     font-size: 15px;
     outline: none;
     box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
 }
 
 input:focus { /* yaani ki to9ros alih bch tekteb */
@@ -166,10 +185,10 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
 }
 
 .service-card {
-    background: white;
+    background: var(--card-bg);
     padding: 25px 15px;
     border-radius: 25px;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-color-light);
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -188,13 +207,14 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
     font-size: 32px;
     color: var(--primary-color);
     margin-bottom: 15px;
-    background: #FFF9E6;
+    background: var(--icon-bg);
     width: 70px;
     height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    transition: background 0.3s;
 }
 
 .service-card h3 {
@@ -212,7 +232,7 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
     font-size: 13px;
     font-weight: 700;
     color: #B2A14E;
-    background: #F9F9F0;
+    background: var(--bg-gradient);
     padding: 5px 12px;
     border-radius: 15px;
 }
@@ -245,10 +265,12 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
     width: 100%;
     padding: 15px 20px 15px 50px;
     border-radius: var(--border-radius);
-    border: 1px solid #E0E0E0;
+    border: 1px solid var(--border-color);
     outline: none;
-    background: white;
+    background: var(--input-bg);
+    color: var(--text-main);
     appearance: none; /* Enlever le style par défaut du select */
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
 }
 
 .list-container {
@@ -258,13 +280,13 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
 }
 
 .list-item {
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-color-light);
     transition: 0.3s;
 }
 
@@ -284,7 +306,7 @@ input:focus { /* yaani ki to9ros alih bch tekteb */
     width: 50px;
     height: 50px;
     background: #1A1A1A;
-    color: white;
+    color: white; /* Keep logo readable */
     border-radius: 12px;
     display: flex;
     align-items: center;

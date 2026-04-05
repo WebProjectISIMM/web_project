@@ -11,6 +11,9 @@
 
     <div class="container">
         <div class="header">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            </div>
             <div class="logo-icon">
                 <i class="fas fa-layer-group"></i>
             </div>
@@ -21,7 +24,7 @@
             <h2>Bienvenue sur SmartQueue</h2>
             <p class="subtitle">Entrez vos identifiants pour continuer</p>
 
-            <form>
+            <form onsubmit="handleLogin(event)">
                 <div class="input-group">
                     <label>Email</label>
                     <div class="input-wrapper">
@@ -47,7 +50,7 @@
             <h2>Créer un compte</h2>
             <p class="subtitle">Rejoignez la file d'attente intelligente</p>
 
-            <form>
+            <form onsubmit="handleSignup(event)">
                 <div class="input-group">
                     <label>Nom complet</label>
                     <div class="input-wrapper">
@@ -77,5 +80,6 @@
         </div>
     </div>
 <script src="signin.js"></script>
+<script src="../theme.js"></script>
 </body>
 </html>

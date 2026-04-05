@@ -18,3 +18,9 @@
                 }
             }
         }
+
+function confirmBooking(agencyName) {
+    alert("Ticket réservé avec succès chez " + agencyName + " !");
+    // Redirect back to profile page as if ticket was added
+    window.location.href = '../profilClient/ProfilClient.html';
+}
