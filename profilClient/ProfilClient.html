@@ -1,86 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"href="style.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>SmartQueue-Mes files</title>
+    <title>SmartQueue - Mes files</title>
 </head>
 
-    <body>
+<body>
 
-   <header>
-        <h5>SmartQueue</h5>
-        <div style="display:flex; align-items:center; gap: 15px; margin-right: 20px;">
-            <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 20px; color: #B2A14E;" onclick="toggleTheme()"></i>
-            <button class="bout" onclick="window.location.href='../signin/signin.html'" style="margin: 0;">Deconnexion</button>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-layer-group"></i> SmartQueue
         </div>
-   </header> 
-   <main>
-    <h2>Mes files en cours</h2>
-    <p>Vous avez <b>1 ticket</b> actifs en ce moment</p>
-    <div class="card">
-        <div class="card-header">
-            <div class="logotext-header">
-                <img src="images/BH.webp" alt="logo" class="logo">
-                <div class="text-header">
-                <span class="nom-header">BH Bank-Faculte</span>
-                  <div class="localisation-identif">
-                    <img src="images/localisation.png"alt="loc" class="loc">
-                    <span class="color">Monastir-Centre ville</span>
-                  </div>
-                </div>
-            
-            </div>
-            <div class="header-right">
-                         <p class="btn-header">en attente..</p>
-            </div>
-                   
-        
-        
+        <div class="nav-links">
+            <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            <button class="btn-signin" onclick="window.location.href='../signin/signin.html'" style="border:none; cursor:pointer; font-family: inherit; font-size: inherit;">Déconnexion</button>
         </div>
-        <div class="card-middle">
-            <div class="middle-1">
-                <p class="text-middle">VOTRE NUMERO<br><span class="numero-gras">A-42</span></p>
+    </nav>
 
-            </div>
-            <div class="middle-2">
-                <p class="text-middle">Estimation<br><span class="text2-middle">~12 min</span></p>
-
-            </div>
-
-
+    <div class="container-wide">
+        <div class="header" style="margin-top: 50px;">
+            <h2>Mes files en cours</h2>
+            <p class="subtitle" id="ticket-count-text">Vous avez <b>0 ticket</b> actif en ce moment</p>
         </div>
-        <div class="card-bottom">
-            <div class="personnes-file">
-                <img src="images/perso.webp" alt="pers" class="pers">
-                <p class="txt">5 personnes avant vous</p>
-            </div>
-            <button class="btn">Annuler mon ticket</button>
 
+        <div id="ticket-container" class="ticket-container">
+            <!-- Tickets will be injected here via JS -->
+            <p class="empty-state">Aucun ticket actif. Veuillez prendre un nouveau ticket.</p>
         </div>
+
+        <button class="btn-primary" style="margin-top: 30px; max-width: 300px;" onclick="window.location.href='../services/services.html'">+ Nouveau Ticket</button>
     </div>
 
-    <!-- NOUVEAU TICKET BUTTON ADDED FOR NAVIGATION FLOW -->
-    <button style="border-radius: 20px; background-color: #B2A14E; color: #1A1A1A; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px;" onclick="window.location.href='../services/services.html'">+ Nouveau Ticket</button>
+    <footer>
+        <p>2026 SmartQueue Tunisia - Système de gestion de file intelligent</p>
+        <nav class="footer-links">
+            <a href="#">Aide</a>
+            <a href="#">Confidentialité</a>
+            <a href="#">Contact</a>
+        </nav>
+    </footer>
 
-   </main>
-   
-   
-    <footer class="footrr">
-        <hr>
-     <p>2026 SmartQueue Tunisia   -  Systeme de gestion de file intelligent</p>
-     <nav class="footer-links">
-        <a href="#">Aide</a>
-        <a href="#">Confidentialite</a>
-        <a href="#"> Contact</a>
-     </nav>
-   </footer>
-
-
-   <script src="../theme.js"></script>
-   </body>
-    
-
+    <script src="ProfilClient.js"></script>
+    <script src="../theme.js"></script>
+</body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartQueue - Connexion</title>
-    <link rel="stylesheet" href="signin.css">
+    <title>SmartQueue - Inscription</title>
+    <link rel="stylesheet" href="signup.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -20,11 +20,18 @@
             <h1>SmartQueue</h1>
         </div>
 
-        <div id="login-form">
-            <h2>Bienvenue sur SmartQueue</h2>
-            <p class="subtitle">Entrez vos identifiants pour continuer</p>
+        <div id="signup-form">
+            <h2>Créer un compte</h2>
+            <p class="subtitle">Rejoignez la file d'attente intelligente</p>
 
-            <form onsubmit="handleLogin(event)">
+            <form onsubmit="handleSignup(event)">
+                <div class="input-group">
+                    <label>Nom complet</label>
+                    <div class="input-wrapper">
+                        <i class="far fa-user"></i>
+                        <input type="text" placeholder="Votre nom" required>
+                    </div>
+                </div>
                 <div class="input-group">
                     <label>Email</label>
                     <div class="input-wrapper">
@@ -37,16 +44,17 @@
                     <label>Mot de passe</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Entrez le mot de passe" id="pass-login" required>
-                        <i class="far fa-eye-slash toggle-password" onclick="togglePass('pass-login')"></i>
+                        <input type="password" placeholder="Créer un mot de passe" id="pass-signup" required>
+                        <i class="far fa-eye-slash toggle-password" onclick="togglePass('pass-signup')"></i>
                     </div>
-                </div><br>
-                <button type="submit" class="btn-primary">Se Connecter</button>
+                </div>
+
+                <button type="submit" class="btn-primary">Créer mon compte</button>
             </form>
-            <p class="footer-text">Pas encore de compte ? <a href="../signup/signup.html">S'inscrire</a></p>
+            <p class="footer-text">Déjà inscrit ? <a href="../signin/signin.html">Se connecter</a></p>
         </div>
     </div>
-<script src="signin.js"></script>
+<script src="signup.js"></script>
 <script src="../theme.js"></script>
 </body>
 </html>

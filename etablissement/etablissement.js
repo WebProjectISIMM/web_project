@@ -19,8 +19,20 @@
             }
         }
 
-function confirmBooking(agencyName) {
+function confirmBooking(agencyName, locationName) {
     alert("Ticket réservé avec succès chez " + agencyName + " !");
+    
+    // Save ticket data to localStorage
+    const newTicket = {
+        agency: agencyName,
+        location: locationName || "Centre Ville", // Default if not passed
+        ticketNumber: "A-" + Math.floor(Math.random() * 90 + 10), // Random A-10 to A-99
+        waitTime: "~" + Math.floor(Math.random() * 20 + 5) + " min", // Random 5 to 25 min
+        peopleAhead: Math.floor(Math.random() * 10 + 1) // Random 1 to 10
+    };
+    
+    localStorage.setItem('activeTicket', JSON.stringify(newTicket));
+
     // Redirect back to profile page as if ticket was added
     window.location.href = '../profilClient/ProfilClient.html';
 }

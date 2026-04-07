@@ -1,11 +1,10 @@
-
 function togglePass(id) {
     const input = document.getElementById(id);
     input.type = input.type === "password" ? "text" : "password";
 }
 
-function handleLogin(event) {
+function handleSignup(event) {
     event.preventDefault();
-    // Simulate login and redirect to Client Profile
+    // Simulate signup and redirect to Client Profile
     window.location.href = '../profilClient/ProfilClient.html';
 }
