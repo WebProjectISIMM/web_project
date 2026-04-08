@@ -322,3 +322,94 @@ footer {
         flex-direction: column;
     }
 }
+
+/* Two-Tracks Section */
+.two-tracks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 60px;
+    text-align: left;
+}
+
+.track-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: 25px;
+    padding: 40px 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.track-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.07);
+    border-color: #B2A14E;
+}
+
+.track-card.track-admin:hover {
+    border-color: #6495ED;
+    box-shadow: 0 18px 40px rgba(100,149,237,0.12);
+}
+
+.track-icon {
+    font-size: 32px;
+    color: #B2A14E;
+    background: var(--icon-bg);
+    width: 64px; height: 64px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    border-radius: 50%;
+}
+
+.track-admin .track-icon {
+    background: rgba(100,149,237,0.12);
+    color: #6495ED;
+}
+
+.track-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.track-card p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.btn-track {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background: #B2A14E;
+    color: #1A1A1A;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    align-self: flex-start;
+}
+
+.btn-track:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(62,49,11,0.3);
+}
+
+.btn-track-admin {
+    background: #6495ED;
+    color: #fff;
+}
+
+.btn-track-admin:hover {
+    box-shadow: 0 6px 15px rgba(100,149,237,0.35);
+}
+
+@media (max-width: 768px) {
+    .two-tracks {
+        grid-template-columns: 1fr;
+    }
+}

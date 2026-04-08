@@ -4,8 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartQueue - Accueil</title>
+    <meta name="description" content="SmartQueue — La solution intelligente pour gérer les files d'attente. Rejoignez la file, gagnez du temps.">
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ── Role-choice modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 48px 40px 40px;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            text-align: center;
+            transform: translateY(30px) scale(0.96);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+            border: 1px solid var(--border-color-light);
+            position: relative;
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 18px;
+            background: none; border: none;
+            font-size: 20px; color: var(--text-muted);
+            cursor: pointer; transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--text-main); }
+        .modal-card h2 {
+            font-size: 26px; font-weight: 700;
+            color: #B2A14E; margin-bottom: 8px;
+        }
+        .modal-card p {
+            color: var(--text-muted); font-size: 14px;
+            margin-bottom: 36px; line-height: 1.6;
+        }
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .role-card {
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s ease;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 12px;
+        }
+        .role-card:hover {
+            border-color: #B2A14E;
+            background: rgba(178,161,78,0.07);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(178,161,78,0.15);
+        }
+        .role-card .role-icon {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: var(--icon-bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: #B2A14E;
+        }
+        .role-card h3 { font-size: 17px; font-weight: 700; }
+        .role-card span { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+        .role-card.admin-role { border-color: rgba(100,149,237,0.3); }
+        .role-card.admin-role:hover { border-color: #6495ED; background: rgba(100,149,237,0.07); box-shadow: 0 10px 25px rgba(100,149,237,0.15); }
+        .role-card.admin-role .role-icon { background: rgba(100,149,237,0.12); color: #6495ED; }
+    </style>
 </head>
 <body>
 
@@ -20,13 +106,34 @@
         </div>
     </nav>
 
+    <!-- Role-Selection Modal -->
+    <div class="modal-overlay" id="roleModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal()" title="Fermer"><i class="fas fa-times"></i></button>
+            <h2 id="modalTitle">Qui êtes-vous ?</h2>
+            <p>Choisissez votre type de compte pour commencer l'inscription sur SmartQueue.</p>
+            <div class="role-options">
+                <a href="signup/signup.html?role=client" class="role-card" id="clientRoleBtn">
+                    <div class="role-icon"><i class="fas fa-user"></i></div>
+                    <h3>Client</h3>
+                    <span>Je veux rejoindre une file d'attente et suivre mon tour.</span>
+                </a>
+                <a href="signup/signup.html?role=agent" class="role-card admin-role" id="agentRoleBtn">
+                    <div class="role-icon"><i class="fas fa-user-tie"></i></div>
+                    <h3>Agent / Admin</h3>
+                    <span>Je travaille dans un établissement et je gère les files.</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-content">
             <h1>Bienvenue sur SmartQueue</h1>
             <p class="hero-subtitle">La solution intelligente pour gérer l'attente. Rejoignez la file, gagnez du temps et profitez de vos services en toute simplicité.</p>
             <div class="hero-buttons">
-                <a href="signup/signup.html" class="btn-primary-large">Commencer maintenant</a>
+                <button onclick="openModal()" class="btn-primary-large" id="startBtn" style="border:none;cursor:pointer;">Commencer maintenant</button>
                 <a href="#features" class="btn-secondary-large">En savoir plus</a>
             </div>
         </div>
@@ -55,6 +162,22 @@
                 <p>Vos données sont protégées. Profitez d'une gestion transparente et entièrement sécurisée.</p>
             </div>
         </div>
+
+        <!-- Who is it for section -->
+        <div class="two-tracks reveal" style="transition-delay:0.3s;">
+            <div class="track-card">
+                <i class="fas fa-user track-icon"></i>
+                <h3>Pour les Clients</h3>
+                <p>Inscrivez-vous, choisissez votre service et suivez votre numéro de file en direct depuis n'importe quel appareil.</p>
+                <a href="signup/signup.html?role=client" class="btn-track">S'inscrire en tant que client</a>
+            </div>
+            <div class="track-card track-admin">
+                <i class="fas fa-user-tie track-icon"></i>
+                <h3>Pour les Agents</h3>
+                <p>Gérez votre guichet, appelez le prochain client, annulez ou passez des tickets — tout depuis votre tableau de bord.</p>
+                <a href="signup/signup.html?role=agent" class="btn-track btn-track-admin">S'inscrire en tant qu'agent</a>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -63,6 +186,21 @@
 
     <script src="theme.js"></script>
     <script>
+        function openModal() {
+            document.getElementById('roleModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('roleModal').classList.remove('active');
+        }
+        // Close on overlay click (outside modal card)
+        document.getElementById('roleModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
         // Scroll reveal effect and Navbar style change on scroll
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
@@ -77,14 +215,12 @@
                 var windowheight = window.innerHeight;
                 var revealtop = reveals[i].getBoundingClientRect().top;
                 var revealpoint = 100;
-
                 if (revealtop < windowheight - revealpoint) {
                     reveals[i].classList.add('active');
                 }
             }
         });
 
-        // Trigger scroll event on load to show elements initially in view
         window.dispatchEvent(new Event('scroll'));
     </script>
 </body>

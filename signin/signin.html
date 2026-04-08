@@ -21,12 +21,19 @@
         </div>
 
         <div id="login-form">
-            <h2>Bienvenue sur SmartQueue</h2>
-            <p class="subtitle">Entrez vos identifiants pour continuer</p>
+            <div class="role-tabs">
+                <button type="button" class="role-tab active" id="tab-client" onclick="setRole('client')">Client</button>
+                <button type="button" class="role-tab" id="tab-agent" onclick="setRole('agent')">Agent / Admin</button>
+            </div>
+
+            <h2 id="login-title">Bienvenue sur SmartQueue</h2>
+            <p class="subtitle" id="login-subtitle">Entrez vos identifiants pour continuer</p>
 
             <form onsubmit="handleLogin(event)">
+                <input type="hidden" id="user-role" value="client">
+                
                 <div class="input-group">
-                    <label>Email</label>
+                    <label id="email-label">Email</label>
                     <div class="input-wrapper">
                         <i class="far fa-envelope"></i>
                         <input type="email" placeholder="Adresse Email" required>
@@ -46,6 +53,54 @@
             <p class="footer-text">Pas encore de compte ? <a href="../signup/signup.html">S'inscrire</a></p>
         </div>
     </div>
+<style>
+    .role-tabs {
+        display: flex;
+        background: var(--glass-bg);
+        padding: 6px;
+        border-radius: 40px;
+        margin-bottom: 30px;
+        border: 1px solid var(--border-color);
+    }
+    .role-tab {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        background: none;
+        color: var(--text-muted);
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+    .role-tab.active {
+        background: var(--primary-color);
+        color: #1A1A1A;
+        box-shadow: 0 4px 10px rgba(178, 161, 78, 0.2);
+    }
+</style>
+<script>
+    function setRole(role) {
+        document.getElementById('user-role').value = role;
+        const title = document.getElementById('login-title');
+        const subtitle = document.getElementById('login-subtitle');
+        const emailLabel = document.getElementById('email-label');
+        
+        document.getElementById('tab-client').classList.toggle('active', role === 'client');
+        document.getElementById('tab-agent').classList.toggle('active', role === 'agent');
+        
+        if (role === 'agent') {
+            title.innerText = "Connexion Agent";
+            subtitle.innerText = "Accédez à votre espace guichet";
+            emailLabel.innerText = "Email professionnel";
+        } else {
+            title.innerText = "Bienvenue sur SmartQueue";
+            subtitle.innerText = "Entrez vos identifiants pour continuer";
+            emailLabel.innerText = "Email";
+        }
+    }
+</script>
+
 <script src="signin.js"></script>
 <script src="../theme.js"></script>
 </body>

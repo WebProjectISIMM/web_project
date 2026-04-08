@@ -5,6 +5,12 @@ function togglePass(id) {
 
 function handleSignup(event) {
     event.preventDefault();
-    // Simulate signup and redirect to Client Profile
-    window.location.href = '../profilClient/ProfilClient.html';
+    const role = document.getElementById('user-role').value;
+    
+    // Simulate signup success
+    if (role === 'agent') {
+        window.location.href = '../agent-dashboard/agent-dashboard.html';
+    } else {
+        window.location.href = '../profilClient/ProfilClient.html';
+    }
 }

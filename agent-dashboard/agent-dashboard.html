@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQueue Agent - Tableau de Bord</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="agent-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="../index.html" class="logo">
+            <i class="fas fa-layer-group"></i> <span>SmartQueue</span>
+        </a>
+        <nav class="nav-links">
+            <div class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-chart-pie"></i> <span>Vue d'ensemble</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-users"></i> <span>File d'attente</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-history"></i> <span>Historique</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i> <span>Paramètres</span>
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">AM</div>
+                <div class="user-info">
+                    <h4>Ahmed Mansour</h4>
+                    <p>Agent de Caisse</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="header-title">
+                <h1>Bonjour, Ahmed 👋</h1>
+                <p>Voici l'état actuel de votre guichet aujourd'hui.</p>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+                <button class="btn-action btn-primary-dark" style="padding: 10px 20px; font-size: 14px;">
+                    <i class="fas fa-power-off"></i> Fermer Guichet
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>En attente</span>
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                </div>
+                <div class="stat-value" id="waiting-count">12</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +3 vs hier
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Servis aujourd'hui</span>
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                </div>
+                <div class="stat-value" id="served-count">48</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +12%
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span>Temps moyen / Client</span>
+                    <div class="stat-icon"><i class="fas fa-stopwatch"></i></div>
+                </div>
+                <div class="stat-value">04:32</div>
+                <div class="stat-trend trend-down">
+                    <i class="fas fa-arrow-down"></i> -15s
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Current Number Display -->
+            <div class="serving-card">
+                <span class="serving-label">Client Actuel</span>
+                <div class="current-number" id="current-number">A-042</div>
+                <div class="action-buttons">
+                    <button class="btn-action btn-primary-dark" onclick="callNext()">
+                        <i class="fas fa-volume-up"></i> Appeler Suivant
+                    </button>
+                    <button class="btn-action btn-secondary-white" onclick="recall()">
+                        <i class="fas fa-redo-alt"></i> Réappeler
+                    </button>
+                    <button class="btn-action btn-secondary-white" style="color: #FF5252;" onclick="cancelTicket()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upcoming List -->
+            <div class="queue-card">
+                <div class="card-header">
+                    <h2>Prochains clients</h2>
+                    <span style="color: var(--primary-color); font-weight: 600;">Voir tout</span>
+                </div>
+                <div class="queue-items" id="upcoming-list">
+                    <div class="queue-item">
+                        <div class="ticket-id">A-043</div>
+                        <div class="ticket-info">
+                            <h5>Sami Ben Ali</h5>
+                            <p>Caisse Principale</p>
+                        </div>
+                        <div class="ticket-wait">Attente: 8 min</div>
+                    </div>
+                    <div class="queue-item">
+                        <div class="ticket-id">A-044</div>
+                        <div class="ticket-info">
+                            <h5>Leila Trabelsi</h5>
+                            <p>Caisse Principale</p>
+                        </div>
+                        <div class="ticket-wait">Attente: 12 min</div>
+                    </div>
+                    <div class="queue-item">
+                        <div class="ticket-id">A-045</div>
+                        <div class="ticket-info">
+                            <h5>Inconnu</h5>
+                            <p>Caisse Principale</p>
+                        </div>
+                        <div class="ticket-wait">Attente: 15 min</div>
+                    </div>
+                    <div class="queue-item">
+                        <div class="ticket-id">B-012</div>
+                        <div class="ticket-info">
+                            <h5>Karim Gharbi</h5>
+                            <p>Caisse Principale</p>
+                        </div>
+                        <div class="ticket-wait">Attente: 22 min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../theme.js"></script>
+    <script src="agent-dashboard.js"></script>
+</body>
+</html>
