@@ -22,17 +22,30 @@
 function confirmBooking(agencyName, locationName) {
     alert("Ticket réservé avec succès chez " + agencyName + " !");
     
-    // Save ticket data to localStorage
+    // Create new ticket object with a unique ID
     const newTicket = {
+        id: "T-" + Date.now(), // Unique ID based on timestamp
         agency: agencyName,
-        location: locationName || "Centre Ville", // Default if not passed
-        ticketNumber: "A-" + Math.floor(Math.random() * 90 + 10), // Random A-10 to A-99
-        waitTime: "~" + Math.floor(Math.random() * 20 + 5) + " min", // Random 5 to 25 min
-        peopleAhead: Math.floor(Math.random() * 10 + 1) // Random 1 to 10
+        location: locationName || "Centre Ville", 
+        ticketNumber: "A-" + Math.floor(Math.random() * 90 + 10), 
+        waitTime: "~" + Math.floor(Math.random() * 20 + 5) + " min", 
+        peopleAhead: Math.floor(Math.random() * 10 + 1)
     };
     
-    localStorage.setItem('activeTicket', JSON.stringify(newTicket));
+    // Get existing tickets or initialize new array
+    let tickets = [];
+    const savedTickets = localStorage.getItem('activeTickets');
+    if (savedTickets) {
+        tickets = JSON.parse(savedTickets);
+    }
+    
+    // Add new ticket and save
+    tickets.push(newTicket);
+    localStorage.setItem('activeTickets', JSON.stringify(tickets));
 
-    // Redirect back to profile page as if ticket was added
+    // Cleanup old single-ticket key if it exists
+    localStorage.removeItem('activeTicket');
+
+    // Redirect back to profile page
     window.location.href = '../profilClient/ProfilClient.html';
 }

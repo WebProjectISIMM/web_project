@@ -1,76 +1,128 @@
-// Simulated queue data
-let currentNum = 42;
-let waitingCount = 12;
-let servedCount = 48;
+// Use shared logic from dashboard-core.js
+let state = getQueueState();
+const profile = getProfile();
+const agentLetter = profile.counterLetter || 'A';
 
-const upcomingData = [
-    { id: 'A-043', name: 'Sami Ben Ali', time: '8 min' },
-    { id: 'A-044', name: 'Leila Trabelsi', time: '12 min' },
-    { id: 'A-045', name: 'Anonyme', time: '15 min' },
-    { id: 'B-012', name: 'Karim Gharbi', time: '22 min' },
-    { id: 'A-046', name: 'Faten Dridi', time: '25 min' },
-    { id: 'A-047', name: 'Omar Said', time: '30 min' }
-];
+function getFilteredUpcoming() {
+    return state.upcomingData.filter(ticket => ticket.id.startsWith(agentLetter));
+}
 
 function callNext() {
-    if (upcomingData.length > 0) {
-        // Move next ticket to current
-        const nextTicket = upcomingData.shift();
-        currentNum = parseInt(nextTicket.id.split('-')[1]);
+    if (getCounterStatus() === 'closed') {
+        alert("Veuillez ouvrir le guichet pour appeler des clients.");
+        return;
+    }
+
+    const filtered = getFilteredUpcoming();
+
+    if (filtered.length > 0) {
+        // Find the index of the first matching ticket in the main array
+        const nextTicket = filtered[0];
+        const ticketIndex = state.upcomingData.findIndex(t => t.id === nextTicket.id);
+        
+        // Remove from main array
+        state.upcomingData.splice(ticketIndex, 1);
+        
+        state.currentTicket = nextTicket; // Store full ticket info
+        state.currentNum = parseInt(nextTicket.id.split('-')[1]);
+        
+        // Add to history
+        addToHistory(nextTicket, 'servi');
         
         // Update DOM
         document.getElementById('current-number').innerText = nextTicket.id;
+        document.getElementById('current-name').innerText = nextTicket.name;
         
-        servedCount++;
-        waitingCount--;
+        state.servedCount++;
+        state.waitingCount--;
         
+        saveQueueState(state);
         updateStats();
         renderUpcoming();
         
         // Visual feedback
-        const display = document.getElementById('current-number');
-        display.style.animation = 'none';
-        void display.offsetWidth; // trigger reflow
-        display.style.animation = 'pulse 0.5s ease-in-out';
+        pulseNumber();
     } else {
-        alert("Plus de clients dans la file !");
+        alert(`Plus de clients avec la lettre ${agentLetter} dans la file !`);
     }
 }
 
 function recall() {
+    if (getCounterStatus() === 'closed') return;
+    pulseNumber();
+}
+
+function cancelTicket() {
+    if (getCounterStatus() === 'closed') return;
+    if (confirm("Voulez-vous vraiment annuler ce ticket ?")) {
+        const filtered = getFilteredUpcoming();
+        if (filtered.length > 0) {
+            const nextTicket = filtered[0];
+            const ticketIndex = state.upcomingData.findIndex(t => t.id === nextTicket.id);
+            
+            const canceledTicket = state.upcomingData.splice(ticketIndex, 1)[0];
+            addToHistory(canceledTicket, 'annulé');
+            state.waitingCount--;
+            saveQueueState(state);
+            updateStats();
+            renderUpcoming();
+        }
+    }
+}
+
+function toggleCounter() {
+    const newStatus = toggleCounterStatus();
+    updateCounterUI(newStatus);
+}
+
+function updateCounterUI(status) {
+    const dot = document.getElementById('status-dot');
+    const text = document.getElementById('status-text');
+    const btnText = document.getElementById('btn-toggle-text');
+    
+    if (status === 'open') {
+        dot.className = 'dot dot-open';
+        text.innerText = 'Guichet Ouvert';
+        btnText.innerText = 'Fermer Guichet';
+    } else {
+        dot.className = 'dot dot-closed';
+        text.innerText = 'Guichet Fermé';
+        btnText.innerText = 'Ouvrir Guichet';
+    }
+}
+
+function pulseNumber() {
     const display = document.getElementById('current-number');
     display.style.animation = 'none';
     void display.offsetWidth;
     display.style.animation = 'pulse 0.5s ease-in-out';
-    
-    // Simulate notification sound or visual ping
-    console.log("Rappel du client " + display.innerText);
-}
-
-function cancelTicket() {
-    if (confirm("Voulez-vous vraiment annuler ce ticket ?")) {
-        callNext(); // Simply move to next for simulation
-    }
 }
 
 function updateStats() {
-    document.getElementById('waiting-count').innerText = waitingCount;
-    document.getElementById('served-count').innerText = servedCount;
+    // Show total waiting for THIS agent's letter? Or total for establishment?
+    // User said "he can choose the letter... and the ticket... should only be starting with that letter"
+    // So waiting count should probably reflect the filtered list for this view.
+    const filtered = getFilteredUpcoming();
+    document.getElementById('waiting-count').innerText = filtered.length;
+    document.getElementById('served-count').innerText = state.servedCount;
 }
 
 function renderUpcoming() {
     const list = document.getElementById('upcoming-list');
+    if (!list) return;
     list.innerHTML = '';
     
-    // Show only first 4
-    upcomingData.slice(0, 4).forEach(ticket => {
+    // Filter by agent letter
+    const filtered = getFilteredUpcoming();
+    
+    filtered.slice(0, 4).forEach(ticket => {
         const item = document.createElement('div');
         item.className = 'queue-item';
         item.innerHTML = `
             <div class="ticket-id">${ticket.id}</div>
             <div class="ticket-info">
                 <h5>${ticket.name}</h5>
-                <p>Caisse Principale</p>
+                <p>Spécialité: ${agentLetter}</p>
             </div>
             <div class="ticket-wait">Attente: ${ticket.time}</div>
         `;
@@ -78,16 +130,17 @@ function renderUpcoming() {
     });
 }
 
-// Add animation keyframes via JS for simplicity if not in CSS
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-`;
-document.head.appendChild(style);
-
 // Initialize
-renderUpcoming();
+document.addEventListener('DOMContentLoaded', () => {
+    updateStats();
+    renderUpcoming();
+    updateCounterUI(getCounterStatus());
+    
+    if (state.currentTicket) {
+        document.getElementById('current-number').innerText = state.currentTicket.id;
+        document.getElementById('current-name').innerText = state.currentTicket.name;
+    } else {
+        document.getElementById('current-number').innerText = `${agentLetter}-000`;
+        document.getElementById('current-name').innerText = `En attente (Guichet ${agentLetter})...`;
+    }
+});

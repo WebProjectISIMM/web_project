@@ -1,23 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
-    renderTicket();
+    renderTickets();
 });
 
-function renderTicket() {
+function renderTickets() {
     const ticketContainer = document.getElementById('ticket-container');
     const headerTitle = document.getElementById('ticket-count-text');
     
-    // Check if there is an active ticket in localStorage
-    const savedTicket = localStorage.getItem('activeTicket');
+    // Support both old 'activeTicket' and new 'activeTickets' for smooth migration
+    let tickets = [];
+    const savedTickets = localStorage.getItem('activeTickets');
+    const oldTicket = localStorage.getItem('activeTicket');
+
+    if (savedTickets) {
+        tickets = JSON.parse(savedTickets);
+    } else if (oldTicket) {
+        // Migrate old single ticket to new array format
+        const ticket = JSON.parse(oldTicket);
+        if (!ticket.id) ticket.id = "T-OLD";
+        tickets.push(ticket);
+        localStorage.setItem('activeTickets', JSON.stringify(tickets));
+        localStorage.removeItem('activeTicket');
+    }
     
-    if (savedTicket) {
-        const ticket = JSON.parse(savedTicket);
+    // Update header text
+    const count = tickets.length;
+    headerTitle.innerHTML = `Vous avez <b>${count} ticket${count !== 1 ? 's' : ''}</b> actif${count !== 1 ? 's' : ''} en ce moment`;
+    
+    if (count > 0) {
+        ticketContainer.innerHTML = ''; // Clear previous content
         
-        // Update header text
-        headerTitle.innerHTML = 'Vous avez <b>1 ticket</b> actif en ce moment';
-        
-        // Build the ticket card HTML
-        ticketContainer.innerHTML = `
-            <div class="card">
+        // Loop through and build HTML for each ticket
+        tickets.forEach(ticket => {
+            const ticketCard = document.createElement('div');
+            ticketCard.className = 'card';
+            ticketCard.style.marginBottom = '20px'; // Add spacing between multiple cards
+            
+            ticketCard.innerHTML = `
                 <div class="card-header">
                     <div class="logotext-header">
                         <div class="logo-ticket">${ticket.agency.substring(0, 4)}</div>
@@ -50,22 +68,32 @@ function renderTicket() {
                         <i class="fas fa-users" style="color: var(--primary-color);"></i>
                         <p class="txt">${ticket.peopleAhead} personnes avant vous</p>
                     </div>
-                    <button class="btn-cancel" onclick="cancelTicket()">Annuler mon ticket</button>
+                    <button class="btn-cancel" onclick="cancelSpecificTicket('${ticket.id}')">Annuler mon ticket</button>
                 </div>
-            </div>
-        `;
+            `;
+            ticketContainer.appendChild(ticketCard);
+        });
     } else {
-        // No ticket active
-        headerTitle.innerHTML = 'Vous avez <b>0 ticket</b> actif en ce moment';
+        // No tickets active
         ticketContainer.innerHTML = `
             <p class="empty-state">Aucun ticket actif. Veuillez prendre un nouveau ticket.</p>
         `;
     }
 }
 
-function cancelTicket() {
+function cancelSpecificTicket(id) {
     if (confirm("Êtes-vous sûr de vouloir annuler ce ticket ?")) {
-        localStorage.removeItem('activeTicket');
-        renderTicket();
+        let tickets = JSON.parse(localStorage.getItem('activeTickets') || '[]');
+        tickets = tickets.filter(t => t.id !== id);
+        localStorage.setItem('activeTickets', JSON.stringify(tickets));
+        renderTickets();
+    }
+}
+
+// Keep old function for compatibility if called elsewhere without ID
+function cancelTicket() {
+    const tickets = JSON.parse(localStorage.getItem('activeTickets') || '[]');
+    if (tickets.length > 0) {
+        cancelSpecificTicket(tickets[0].id);
     }
 }
