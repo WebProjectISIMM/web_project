@@ -34,18 +34,20 @@ function confirmBooking(agencyName, locationName) {
     
     // Get existing tickets or initialize new array
     let tickets = [];
-    const savedTickets = localStorage.getItem('activeTickets');
+    const storageKey = `activeTickets_${USER_ID}`;
+    const savedTickets = localStorage.getItem(storageKey);
     if (savedTickets) {
         tickets = JSON.parse(savedTickets);
     }
     
     // Add new ticket and save
     tickets.push(newTicket);
-    localStorage.setItem('activeTickets', JSON.stringify(tickets));
+    localStorage.setItem(storageKey, JSON.stringify(tickets));
+
 
     // Cleanup old single-ticket key if it exists
     localStorage.removeItem('activeTicket');
 
     // Redirect back to profile page
-    window.location.href = '../profilClient/ProfilClient.html';
+    window.location.href = '../profilClient/ProfilClient.php';
 }

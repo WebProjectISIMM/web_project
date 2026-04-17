@@ -1,4 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../signin/signin.html");
+    exit;
+}
+?>
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -22,31 +30,36 @@
         </div>
 
         <div class="services-grid">
-            <div class="service-card" onclick="window.location.href='../etablissement/etablissement.html'">
+            <div class="service-card" onclick="window.location.href='../etablissement/etablissement.php'">
                 <div class="service-icon"><i class="fas fa-university"></i></div>
                 <h3>Banque</h3>
             </div>
 
-            <div class="service-card" onclick="window.location.href='../cinema/cinema.html'">
+            <div class="service-card" onclick="window.location.href='../cinema/cinema.php'">
                 <div class="service-icon"><i class="fas fa-film"></i></div>
                 <h3>Cinéma</h3>
             </div>
 
-            <div class="service-card" onclick="window.location.href='../resto/resto.html'">
+            <div class="service-card" onclick="window.location.href='../resto/resto.php'">
                 <div class="service-icon"><i class="fas fa-utensils"></i></div>
                 <h3>Resto U</h3>
             </div>
 
-            <div class="service-card" onclick="window.location.href='../admin/admin.html'">
+            <div class="service-card" onclick="window.location.href='../admin/admin.php'">
                 <div class="service-icon"><i class="fas fa-file-invoice"></i></div>
                 <h3>Administration</h3>
             </div>
+
         </div>
 
         <div class="footer-actions">
             <button class="btn-secondary" onclick="window.history.back()">Retour</button>
         </div>
     </div>
-<script src="../theme.js"></script>
+    <script>
+        const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
+    </script>
+    <script src="../theme.js"></script>
+
 </body>
 </html>

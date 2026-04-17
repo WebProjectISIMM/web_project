@@ -21,54 +21,25 @@
         </div>
 
         <div id="signup-form">
-            <div class="role-tabs">
-                <button type="button" class="role-tab active" id="tab-client" onclick="setRole('client')">Client</button>
-                <button type="button" class="role-tab" id="tab-agent" onclick="setRole('agent')">Agent / Admin</button>
-            </div>
+            <h2 id="signup-title">Créer un compte</h2>
+            <p class="subtitle" id="signup-subtitle">Rejoignez la file d'attente intelligente rapidement</p>
 
-            <h2 id="signup-title">Créer un compte Client</h2>
-            <p class="subtitle" id="signup-subtitle">Rejoignez la file d'attente intelligente</p>
-
-            <form onsubmit="handleSignup(event)">
-                <input type="hidden" id="user-role" value="client">
+            <form action="../register.php" method="POST">
+                <input type="hidden" id="user-role" name="role" value="client">
                 
                 <div class="input-group">
                     <label>Nom complet</label>
                     <div class="input-wrapper">
                         <i class="far fa-user"></i>
-                        <input type="text" placeholder="Votre nom" required>
-                    </div>
-                </div>
-
-                <!-- Agent Specific Fields -->
-                <div id="agent-fields" style="display: none;">
-                    <div class="input-group">
-                        <label>Nom de l'Etablissement</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-building"></i>
-                            <input type="text" id="establishment-name" placeholder="Ex: Banque de Tunisie">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Secteur / Service</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-briefcase"></i>
-                            <select id="service-sector" style="width: 100%; padding: 18px 20px 18px 50px; border-radius: var(--border-radius); border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); appearance: none;">
-                                <option value="banque">Banque / Finance</option>
-                                <option value="administration">Administration Publique</option>
-                                <option value="sante">Santé / Clinique</option>
-                                <option value="retail">Commerce / Magasin</option>
-                            </select>
-                            <i class="fas fa-chevron-down" style="left: auto; right: 20px; font-size: 12px; pointer-events: none;"></i>
-                        </div>
+                        <input type="text" name="username" placeholder="Votre nom" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Email professionnel</label>
+                    <label>Email</label>
                     <div class="input-wrapper">
                         <i class="far fa-envelope"></i>
-                        <input type="email" placeholder="Adresse Email" required>
+                        <input type="email" name="email" placeholder="Adresse Email" required>
                     </div>
                 </div>
 
@@ -76,7 +47,7 @@
                     <label>Mot de passe</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Créer un mot de passe" id="pass-signup" required>
+                        <input type="password" name="password" placeholder="Créer un mot de passe" id="pass-signup" required>
                         <i class="far fa-eye-slash toggle-password" onclick="togglePass('pass-signup')"></i>
                     </div>
                 </div>
@@ -87,61 +58,22 @@
         </div>
     </div>
 <style>
-    .role-tabs {
-        display: flex;
-        background: var(--glass-bg);
-        padding: 6px;
-        border-radius: 40px;
-        margin-bottom: 30px;
-        border: 1px solid var(--border-color);
-    }
-    .role-tab {
-        flex: 1;
-        padding: 12px;
-        border: none;
-        background: none;
-        color: var(--text-muted);
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 30px;
-        transition: all 0.3s ease;
-    }
-    .role-tab.active {
-        background: var(--primary-color);
-        color: #1A1A1A;
-        box-shadow: 0 4px 10px rgba(178, 161, 78, 0.2);
-    }
+    /* Kept some base styles but removed role-tabs related ones */
 </style>
 <script>
-    function setRole(role) {
-        document.getElementById('user-role').value = role;
-        const agentFields = document.getElementById('agent-fields');
-        const title = document.getElementById('signup-title');
-        const subtitle = document.getElementById('signup-subtitle');
-        const estInput = document.getElementById('establishment-name');
-        
-        document.getElementById('tab-client').classList.toggle('active', role === 'client');
-        document.getElementById('tab-agent').classList.toggle('active', role === 'agent');
-        
-        if (role === 'agent') {
-            agentFields.style.display = 'block';
-            title.innerText = "Inscription Agent";
-            subtitle.innerText = "Gérez vos clients en toute simplicité";
-            estInput.setAttribute('required', '');
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
         } else {
-            agentFields.style.display = 'none';
-            title.innerText = "Créer un compte Client";
-            subtitle.innerText = "Rejoignez la file d'attente intelligente";
-            estInput.removeAttribute('required');
+            input.type = "password";
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
         }
     }
-
-    // Auto-select role based on URL param
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('role') === 'agent') {
-        setRole('agent');
-    }
 </script>
+
 
 <script src="signup.js"></script>
 <script src="../theme.js"></script>

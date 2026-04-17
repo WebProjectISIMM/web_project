@@ -1,4 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../signin/signin.html");
+    exit;
+}
+?>
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -65,7 +73,11 @@
         </div>
     </div>
     
-<script src="../etablissement/etablissement.js"></script>
-<script src="../theme.js"></script>
+    <script>
+        const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
+    </script>
+    <script src="../etablissement/etablissement.js?v=2"></script>
+    <script src="../theme.js"></script>
+
 </body>
 </html>

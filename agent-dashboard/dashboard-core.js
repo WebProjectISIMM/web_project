@@ -59,9 +59,18 @@ function addToHistory(ticket, status = 'servi') {
 }
 
 function getProfile() {
+    if (window.userProfile) {
+        return {
+            ...defaultProfile,
+            name: window.userProfile.name,
+            role: window.userProfile.role,
+            service: window.userProfile.establishment
+        };
+    }
     const saved = localStorage.getItem(PROFILE_KEY);
     return saved ? JSON.parse(saved) : defaultProfile;
 }
+
 
 function saveProfile(profile) {
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));

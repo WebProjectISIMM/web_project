@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] === 'client') {
+    header("Location: ../signin/signin.html");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,40 +14,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="agent-dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        window.userProfile = {
+            name: "<?php echo addslashes($_SESSION['user_name']); ?>",
+            role: "<?php echo addslashes($_SESSION['sector']) ?: 'Agent de Service'; ?>",
+            establishment: "<?php echo addslashes($_SESSION['establishment']); ?>",
+            roleType: "<?php echo $_SESSION['user_role']; ?>"
+        };
+    </script>
 </head>
 <body class="dark-theme">
     <!-- Sidebar -->
     <aside class="sidebar">
-        <a href="../index.html" class="logo">
+        <a href="../index.php" class="logo">
             <i class="fas fa-layer-group"></i> <span>SmartQueue</span>
         </a>
         <nav class="nav-links">
             <div class="nav-item">
-                <a href="agent-dashboard.html" class="nav-link">
+                <a href="agent-dashboard.php" class="nav-link">
                     <i class="fas fa-chart-pie"></i> <span>Vue d'ensemble</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="agent-history.html" class="nav-link active">
+                <a href="agent-history.php" class="nav-link active">
                     <i class="fas fa-history"></i> <span>Historique</span>
                 </a>
             </div>
             <div class="nav-item">
-                <a href="agent-settings.html" class="nav-link">
+                <a href="agent-settings.php" class="nav-link">
                     <i class="fas fa-cog"></i> <span>Paramètres</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="../logout.php" class="nav-link" style="color: #FF5252;">
+                    <i class="fas fa-sign-out-alt"></i> <span>Déconnexion</span>
                 </a>
             </div>
         </nav>
         <div class="sidebar-footer">
             <div class="user-profile">
-                <div class="avatar">AM</div>
+                <div class="avatar"><?php echo substr($_SESSION['user_name'], 0, 1); ?></div>
                 <div class="user-info">
-                    <h4>Ahmed Mansour</h4>
-                    <p>Agent de Caisse</p>
+                    <h4><?php echo $_SESSION['user_name']; ?></h4>
+                    <p><?php echo ucfirst($_SESSION['sector']) ?: 'Agent de Service'; ?></p>
                 </div>
             </div>
         </div>
     </aside>
+
 
     <!-- Main Content -->
     <main class="main-content">

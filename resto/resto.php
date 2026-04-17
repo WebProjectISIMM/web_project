@@ -1,9 +1,17 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../signin/signin.html");
+    exit;
+}
+?>
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartQueue - Choisir le Cinéma</title>
+    <title>SmartQueue - Choisir le Restaurant Universitaire</title>
     <link rel="stylesheet" href="../signin/signin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -16,47 +24,47 @@
             <div class="logo-mini">
                 <i class="fas fa-layer-group"></i> SmartQueue
             </div>
-            <h2>Cinémas disponibles</h2>
-            <p class="subtitle">Trouvez la salle de cinéma la plus proche de vous</p>
+            <h2>Restaurants U disponibles</h2>
+            <p class="subtitle">Trouvez le RU le plus proche de vous</p>
         </div>
 
         <div class="filter-section">
             <div class="input-wrapper search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Rechercher un cinéma..." onkeyup="filterList()">
+                <input type="text" id="searchInput" placeholder="Rechercher un Resto U..." onkeyup="filterList()">
             </div>
 
             <div class="input-wrapper filter-box">
                 <i class="fas fa-location-dot"></i>
                 <select id="locationFilter" onchange="filterList()">
                     <option value="">Toutes les localisations</option>
+                    <option value="Monastir">Monastir</option>
                     <option value="Sousse">Sousse</option>
-                    <option value="Tunis">Tunis</option>
                 </select>
             </div>
         </div>
 
         <div class="list-container" id="agencyList">
-            <div class="list-item card" data-name="Pathé" data-location="Sousse">
+            <div class="list-item card" data-name="Campus" data-location="Monastir">
                 <div class="item-info">
-                    <div class="item-logo"><i class="fas fa-film"></i></div>
+                    <div class="item-logo"><i class="fas fa-utensils"></i></div>
                     <div class="item-details">
-                        <h3>Cinéma Pathé</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> Sousse, Mall of Sousse</p>
+                        <h3>RU Campus</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Monastir, Zone Univ</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('Cinéma Pathé')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('RU Campus Monastir')">Choisir</button>
             </div>
 
-            <div class="list-item card" data-name="Le Colisée" data-location="Tunis">
+            <div class="list-item card" data-name="Sahloul" data-location="Sousse">
                 <div class="item-info">
-                    <div class="item-logo"><i class="fas fa-film"></i></div>
+                    <div class="item-logo"><i class="fas fa-utensils"></i></div>
                     <div class="item-details">
-                        <h3>Le Colisée</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> Tunis, Centre Ville</p>
+                        <h3>RU Sahloul</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Sousse, Cité Sahloul</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('Le Colisée')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('RU Sahloul Sousse')">Choisir</button>
             </div>
         </div>
 
@@ -65,7 +73,11 @@
         </div>
     </div>
     
-<script src="../etablissement/etablissement.js"></script>
-<script src="../theme.js"></script>
+    <script>
+        const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
+    </script>
+    <script src="../etablissement/etablissement.js?v=2"></script>
+    <script src="../theme.js"></script>
+
 </body>
 </html>

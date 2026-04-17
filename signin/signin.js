@@ -6,12 +6,24 @@ function togglePass(id) {
 
 function handleLogin(event) {
     event.preventDefault();
-    const role = document.getElementById('user-role').value;
-    
-    // Simulate login and redirect
-    if (role === 'agent') {
-        window.location.href = '../agent-dashboard/agent-dashboard.html';
-    } else {
-        window.location.href = '../profilClient/ProfilClient.html';
-    }
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch('../login.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '../' + data.redirect;
+        } else {
+            alert(data.message || 'Erreur de connexion');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Une erreur est survenue lors de la connexion.');
+    });
 }
+
