@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>SmartQueue - Mes files</title>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="../index.html" class="logo">
+            <i class="fas fa-layer-group"></i> <span>SmartQueue</span>
+        </a>
+        <nav class="nav-links">
+            <div class="nav-item">
+                <a href="agent-dashboard.html" class="nav-link active">
+                    <i class="fas fa-chart-pie"></i> <span>Vue d'ensemble</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="agent-history.html" class="nav-link">
+                    <i class="fas fa-history"></i> <span>Historique</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="agent-settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i> <span>Paramètres</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="../agent-dashboard/agent-dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-retweet"></i> <span>Dashboard</span>
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">AM</div>
+                <div class="user-info">
+                    <h4>Ahmed Mansour</h4>
+                    <p>Agent de Caisse</p>
+                </div>
+                <div>
+                    <a class="logout-btn" onclick="window.location.href='../signin/signin.html'">
+                        <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="header-title">
+                <h1>Bonjour, Ahmed 👋</h1>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            </div>
+        </header>
+
+
+    <div class="container-wide">
+        <div class="header" style="margin-top: 50px;">
+            <h2>Mes files en cours</h2>
+            <p class="subtitle" id="ticket-count-text">Vous avez <b>0 ticket</b> actif en ce moment</p>
+        </div>
+
+        <div id="ticket-container" class="ticket-container">
+            <!-- Tickets will be injected here via JS -->
+            <p class="empty-state">Aucun ticket actif. Veuillez prendre un nouveau ticket.</p>
+        </div>
+
+        <button class="btn-primary" style="margin-top: 30px; max-width: 300px;" onclick="window.location.href='../services/services.html'">+ Nouveau Ticket</button>
+    </div>
+
+    <footer>
+        <p>2026 SmartQueue Tunisia - Système de gestion de file intelligent</p>
+        <nav class="footer-links">
+            <a href="#">Aide</a>
+            <a href="#">Confidentialité</a>
+            <a href="#">Contact</a>
+        </nav>
+    </footer>
+
+    <script src="ProfilClient.js"></script>
+    <script src="../theme.js"></script>
+</body>
+</html>

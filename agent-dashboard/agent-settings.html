@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQueue Agent - Paramètres</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="agent-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="../index.html" class="logo">
+            <i class="fas fa-layer-group"></i> <span>SmartQueue</span>
+        </a>
+        <nav class="nav-links">
+            <div class="nav-item">
+                <a href="agent-dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-pie"></i> <span>Vue d'ensemble</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="agent-history.html" class="nav-link">
+                    <i class="fas fa-history"></i> <span>Historique</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="agent-settings.html" class="nav-link active">
+                    <i class="fas fa-cog"></i> <span>Paramètres</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="../profilClient/ProfilClient.html" class="nav-link">
+                    <i class="fa-solid fa-retweet"></i> <span>Dashboard</span>
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">AM</div>
+                <div class="user-info">
+                    <h4>Ahmed Mansour</h4>
+                    <p>Agent de Caisse</p>
+                </div>
+                <div>
+                    <a class="logout-btn" onclick="window.location.href='../signin/signin.html'">
+                        <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="header-title">
+                <h1>Paramètres</h1>
+                <p>Gérez votre profil et les configurations de votre guichet.</p>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+                <button class="btn-action btn-primary-dark" style="background: var(--danger-color); color: white;" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </header>
+
+        <div class="settings-grid">
+            <!-- Profile Settings -->
+            <div class="settings-card">
+                <h3><i class="fas fa-user-circle" style="color: var(--primary-color); margin-right: 10px;"></i> Profil Agent</h3>
+                <form id="profile-form" style="margin-top: 24px;" onsubmit="handleProfileUpdate(event)">
+                    <div class="form-group">
+                        <label>Nom Complet</label>
+                        <input type="text" id="prof-name" value="Ahmed Mansour" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rôle / Titre</label>
+                        <input type="text" id="prof-role" value="Agent de Caisse" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom du Guichet</label>
+                        <input type="text" id="prof-counter" value="Guichet 03" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Lettre du Guichet (Précédent Ticket)</label>
+                        <select id="prof-letter" style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--glass-bg); color: var(--text-main); appearance: none;">
+                            <option value="A">A - Caisse / Accueil</option>
+                            <option value="B">B - Service Client</option>
+                            <option value="C">C - Retrait / Dépôt</option>
+                            <option value="D">D - Direction</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-save">Enregistrer les modifications</button>
+                </form>
+            </div>
+
+            <!-- Dashboard Options -->
+            <div class="settings-card">
+                <h3><i class="fas fa-sliders-h" style="color: var(--primary-color); margin-right: 10px;"></i> Préférences</h3>
+                <div style="margin-top: 24px;">
+                    <div class="switch-group">
+                        <div>
+                            <h5 style="margin-bottom: 4px;">Notifications Sonores</h5>
+                            <p style="font-size: 12px; color: var(--text-muted);">Jouer un son lors de l'appel d'un client.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="switch-group">
+                        <div>
+                            <h5 style="margin-bottom: 4px;">Affichage Automatique</h5>
+                            <p style="font-size: 12px; color: var(--text-muted);">Passer au client suivant après 30s.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="switch-group">
+                        <div>
+                            <h5 style="margin-bottom: 4px;">Mode Sombre Automatique</h5>
+                            <p style="font-size: 12px; color: var(--text-muted);">S'adapte aux paramètres système.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" style="visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%);">
+        Paramètres enregistrés avec succès !
+    </div>
+
+    <script src="../theme.js"></script>
+    <script src="dashboard-core.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profile = getProfile();
+            document.getElementById('prof-name').value = profile.name;
+            document.getElementById('prof-role').value = profile.role;
+            document.getElementById('prof-counter').value = profile.counter;
+            document.getElementById('prof-letter').value = profile.counterLetter || 'A';
+        });
+
+        function handleProfileUpdate(event) {
+            event.preventDefault();
+            const profile = {
+                name: document.getElementById('prof-name').value,
+                role: document.getElementById('prof-role').value,
+                counter: document.getElementById('prof-counter').value,
+                counterLetter: document.getElementById('prof-letter').value,
+                service: getProfile().service // preserve
+            };
+            saveProfile(profile);
+            showToast();
+            
+            // Re-apply to sidebars (shared logic does this on DOM load, but let's force update here)
+            window.location.reload(); 
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.visibility = "visible";
+            setTimeout(() => { toast.style.visibility = "hidden"; }, 3000);
+        }
+
+        function logout() {
+            if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+                window.location.href = '../index.html';
+            }
+        }
+    </script>
+</body>
+</html>
