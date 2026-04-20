@@ -3,21 +3,27 @@ session_start();
 $logged_in = isset($_SESSION['user_id']);
 $dashboard_link = '#';
 if ($logged_in) {
-    if ($_SESSION['user_role'] === 'main_admin') $dashboard_link = 'admin/main-admin-dashboard.php';
-    else if ($_SESSION['user_role'] === 'admin') $dashboard_link = 'agent-dashboard/agent-dashboard.php';
-    else $dashboard_link = 'profilClient/ProfilClient.php';
+    if ($_SESSION['user_role'] === 'main_admin')
+        $dashboard_link = 'admin/main-admin-dashboard.php';
+    else if ($_SESSION['user_role'] === 'admin')
+        $dashboard_link = 'agent-dashboard/agent-dashboard.php';
+    else
+        $dashboard_link = 'profilClient/ProfilClient.php';
 }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartQueue - Accueil</title>
-    <meta name="description" content="SmartQueue — La solution intelligente pour gérer les files d'attente. Rejoignez la file, gagnez du temps.">
+    <meta name="description"
+        content="SmartQueue — La solution intelligente pour gérer les files d'attente. Rejoignez la file, gagnez du temps.">
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
     <!-- Header / Navbar -->
@@ -26,10 +32,13 @@ if ($logged_in) {
             <i class="fas fa-layer-group"></i> SmartQueue
         </div>
         <div class="nav-links">
-            <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;"
+                onclick="toggleTheme()"></i>
             <?php if ($logged_in): ?>
-                <a href="<?php echo $dashboard_link; ?>" class="btn-signin" style="background: var(--primary-color); color: #1A1A1A;">Tableau de Bord</a>
-                <a href="logout.php" class="btn-signin" style="border: 1px solid var(--border-color); margin-left:10px;">Déconnexion</a>
+                <a href="<?php echo $dashboard_link; ?>" class="btn-signin"
+                    style="background: var(--primary-color); color: #1A1A1A;">Tableau de Bord</a>
+                <a href="logout.php" class="btn-signin"
+                    style="border: 1px solid var(--border-color); margin-left:10px;">Déconnexion</a>
             <?php else: ?>
                 <a href="signin/signin.html" class="btn-signin">Connexion</a>
             <?php endif; ?>
@@ -40,12 +49,15 @@ if ($logged_in) {
     <div class="hero-section">
         <div class="hero-content">
             <h1>Bienvenue sur SmartQueue</h1>
-            <p class="hero-subtitle">La solution intelligente pour gérer l'attente. Rejoignez la file, gagnez du temps et profitez de vos services en toute simplicité.</p>
+            <p class="hero-subtitle">La solution intelligente pour gérer l'attente. Rejoignez la file, gagnez du temps
+                et profitez de vos services en toute simplicité.</p>
             <div class="hero-buttons">
                 <?php if ($logged_in): ?>
-                    <a href="<?php echo $dashboard_link; ?>" class="btn-primary-large" style="text-decoration: none;">Accéder à mon espace</a>
+                    <a href="<?php echo $dashboard_link; ?>" class="btn-primary-large"
+                        style="text-decoration: none;">Accéder à mon espace</a>
                 <?php else: ?>
-                    <a href="signup/signup.html" class="btn-primary-large" style="text-decoration: none;">Commencer maintenant</a>
+                    <a href="signup/signup.html" class="btn-primary-large" style="text-decoration: none;">Commencer
+                        maintenant</a>
                 <?php endif; ?>
                 <a href="#features" class="btn-secondary-large">En savoir plus</a>
             </div>
@@ -77,14 +89,18 @@ if ($logged_in) {
         </div>
 
         <div class="two-tracks reveal" style="transition-delay:0.3s; margin-top: 40px; text-align: center;">
-            <div style="background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border-color);">
+            <div
+                style="background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border-color);">
                 <i class="fas fa-rocket fa-3x" style="color: #B2A14E; margin-bottom: 20px;"></i>
                 <h3>Prêt à simplifier votre attente ?</h3>
-                <p style="color: var(--text-muted); margin-bottom: 30px;">Inscrivez-vous en quelques secondes et commencez à utiliser SmartQueue dès aujourd'hui.</p>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">Inscrivez-vous en quelques secondes et
+                    commencez à utiliser SmartQueue dès aujourd'hui.</p>
                 <?php if (!$logged_in): ?>
-                    <a href="signup/signup.html" class="btn-primary-large" style="text-decoration: none; display: inline-block;">Créer mon compte gratuit</a>
+                    <a href="signup/signup.html" class="btn-primary-large"
+                        style="text-decoration: none; display: inline-block;">Créer mon compte gratuit</a>
                 <?php else: ?>
-                    <a href="<?php echo $dashboard_link; ?>" class="btn-primary-large" style="text-decoration: none; display: inline-block;">Mon Tableau de Bord</a>
+                    <a href="<?php echo $dashboard_link; ?>" class="btn-primary-large"
+                        style="text-decoration: none; display: inline-block;">Mon Tableau de Bord</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -120,5 +136,5 @@ if ($logged_in) {
         window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
-</html>
 
+</html>

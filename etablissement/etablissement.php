@@ -64,7 +64,7 @@ if (!isset($_SESSION['user_id'])) {
                         <p><i class="fas fa-map-marker-alt"></i> Monastir, Centre Ville</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('BIAT Marina')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('BIAT Marina', 'Tunis', 'banque')">Choisir</button>
             </div>
 
             <div class="list-item card" data-name="BH" data-location="Monastir">
@@ -75,7 +75,7 @@ if (!isset($_SESSION['user_id'])) {
                         <p><i class="fas fa-map-marker-alt"></i> Monastir, Zone Univ</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('BH Faculté')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('BH Faculté', 'Monastir', 'banque')">Choisir</button>
             </div>
 
             <div class="list-item card" data-name="BIAT" data-location="Sousse">
@@ -86,7 +86,7 @@ if (!isset($_SESSION['user_id'])) {
                         <p><i class="fas fa-map-marker-alt"></i> Sousse, Corniche</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('BIAT Sousse')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('BIAT Sousse', 'Sousse', 'banque')">Choisir</button>
             </div>
         </div>
 

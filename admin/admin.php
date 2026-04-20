@@ -53,7 +53,7 @@ if (!isset($_SESSION['user_id'])) {
                         <p><i class="fas fa-map-marker-alt"></i> Tunis, Centre Ville</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('La Poste - Tunis Centre')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('La Poste - Tunis Centre', 'Tunis', 'administration')">Choisir</button>
             </div>
 
             <div class="list-item card" data-name="Municipalité" data-location="Sousse">
@@ -64,7 +64,7 @@ if (!isset($_SESSION['user_id'])) {
                         <p><i class="fas fa-map-marker-alt"></i> Sousse, Médina</p>
                     </div>
                 </div>
-                <button class="btn-select" onclick="confirmBooking('Municipalité de Sousse')">Choisir</button>
+                <button class="btn-select" onclick="confirmBooking('Municipalité de Sousse', 'Sousse', 'administration')">Choisir</button>
             </div>
         </div>
 

@@ -2,7 +2,7 @@ function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     let isDark = document.body.classList.contains('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
+
     // Update icons if they exist
     let themeIcons = document.querySelectorAll('.theme-toggle-icon');
     themeIcons.forEach(icon => {
@@ -17,7 +17,7 @@ function toggleTheme() {
 }
 
 // Apply theme on load immediately to avoid flicker if possible, otherwise DOMContentLoaded
-(function() {
+(function () {
     let savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');

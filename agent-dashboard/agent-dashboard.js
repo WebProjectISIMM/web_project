@@ -1,146 +1,163 @@
-// Use shared logic from dashboard-core.js
-let state = getQueueState();
+/**
+ * SmartQueue – Agent Dashboard (main view)
+ * The queue is already scoped to this agent's service via dashboard-core.js
+ * No letter-filtering needed — every ticket in the queue belongs to this service.
+ */
+
+let state   = getQueueState();
 const profile = getProfile();
-const agentLetter = profile.counterLetter || 'A';
 
-function getFilteredUpcoming() {
-    return state.upcomingData.filter(ticket => ticket.id.startsWith(agentLetter));
-}
-
+// ── Call next client ──────────────────────────────────────────────────────────
 function callNext() {
     if (getCounterStatus() === 'closed') {
         alert("Veuillez ouvrir le guichet pour appeler des clients.");
         return;
     }
 
-    const filtered = getFilteredUpcoming();
+    state = getQueueState(); // re-read in case a new booking just arrived
 
-    if (filtered.length > 0) {
-        // Find the index of the first matching ticket in the main array
-        const nextTicket = filtered[0];
-        const ticketIndex = state.upcomingData.findIndex(t => t.id === nextTicket.id);
-        
-        // Remove from main array
-        state.upcomingData.splice(ticketIndex, 1);
-        
-        state.currentTicket = nextTicket; // Store full ticket info
-        state.currentNum = parseInt(nextTicket.id.split('-')[1]);
-        
-        // Add to history
+    if (state.upcomingData.length > 0) {
+        const nextTicket = state.upcomingData.shift(); // take first in queue
+
+        state.currentTicket = nextTicket;
+        state.currentNum    = parseInt(nextTicket.id.split('-')[1]) || 0;
+        state.servedCount   = (state.servedCount || 0) + 1;
+        state.waitingCount  = state.upcomingData.length;
+
         addToHistory(nextTicket, 'servi');
-        
-        // Update DOM
-        document.getElementById('current-number').innerText = nextTicket.id;
-        document.getElementById('current-name').innerText = nextTicket.name;
-        
-        state.servedCount++;
-        state.waitingCount--;
-        
         saveQueueState(state);
+
+        document.getElementById('current-number').innerText = nextTicket.id;
+        document.getElementById('current-name').innerText   = nextTicket.name || 'Client';
+
         updateStats();
         renderUpcoming();
-        
-        // Visual feedback
         pulseNumber();
     } else {
-        alert(`Plus de clients avec la lettre ${agentLetter} dans la file !`);
+        alert("Aucun client en attente dans votre file !");
     }
 }
 
+// ── Recall current client ─────────────────────────────────────────────────────
 function recall() {
     if (getCounterStatus() === 'closed') return;
     pulseNumber();
 }
 
+// ── Cancel the next ticket in queue ──────────────────────────────────────────
 function cancelTicket() {
     if (getCounterStatus() === 'closed') return;
-    if (confirm("Voulez-vous vraiment annuler ce ticket ?")) {
-        const filtered = getFilteredUpcoming();
-        if (filtered.length > 0) {
-            const nextTicket = filtered[0];
-            const ticketIndex = state.upcomingData.findIndex(t => t.id === nextTicket.id);
-            
-            const canceledTicket = state.upcomingData.splice(ticketIndex, 1)[0];
-            addToHistory(canceledTicket, 'annulé');
-            state.waitingCount--;
+
+    state = getQueueState();
+
+    if (state.upcomingData.length > 0) {
+        if (confirm("Voulez-vous vraiment annuler ce ticket ?")) {
+            const canceled = state.upcomingData.shift();
+            addToHistory(canceled, 'annulé');
+            state.waitingCount = state.upcomingData.length;
             saveQueueState(state);
             updateStats();
             renderUpcoming();
         }
+    } else {
+        alert("Aucun ticket à annuler.");
     }
 }
 
+// ── Open / Close counter toggle ───────────────────────────────────────────────
 function toggleCounter() {
     const newStatus = toggleCounterStatus();
     updateCounterUI(newStatus);
 }
 
 function updateCounterUI(status) {
-    const dot = document.getElementById('status-dot');
-    const text = document.getElementById('status-text');
+    const dot     = document.getElementById('status-dot');
+    const text    = document.getElementById('status-text');
     const btnText = document.getElementById('btn-toggle-text');
-    
+
     if (status === 'open') {
-        dot.className = 'dot dot-open';
+        dot.className  = 'dot dot-open';
         text.innerText = 'Guichet Ouvert';
         btnText.innerText = 'Fermer Guichet';
     } else {
-        dot.className = 'dot dot-closed';
+        dot.className  = 'dot dot-closed';
         text.innerText = 'Guichet Fermé';
         btnText.innerText = 'Ouvrir Guichet';
     }
 }
 
+// ── Visual pulse on current number ────────────────────────────────────────────
 function pulseNumber() {
     const display = document.getElementById('current-number');
     display.style.animation = 'none';
-    void display.offsetWidth;
-    display.style.animation = 'pulse 0.5s ease-in-out';
+    void display.offsetWidth; // reflow
+    display.style.animation  = 'pulse 0.5s ease-in-out';
 }
 
+// ── Update stat cards ─────────────────────────────────────────────────────────
 function updateStats() {
-    // Show total waiting for THIS agent's letter? Or total for establishment?
-    // User said "he can choose the letter... and the ticket... should only be starting with that letter"
-    // So waiting count should probably reflect the filtered list for this view.
-    const filtered = getFilteredUpcoming();
-    document.getElementById('waiting-count').innerText = filtered.length;
-    document.getElementById('served-count').innerText = state.servedCount;
+    state = getQueueState();
+    const waitingEl = document.getElementById('waiting-count');
+    const servedEl  = document.getElementById('served-count');
+    if (waitingEl) waitingEl.innerText = state.upcomingData.length;
+    if (servedEl)  servedEl.innerText  = state.servedCount || 0;
 }
 
+// ── Render upcoming queue list ────────────────────────────────────────────────
 function renderUpcoming() {
     const list = document.getElementById('upcoming-list');
     if (!list) return;
+
+    state = getQueueState();
     list.innerHTML = '';
-    
-    // Filter by agent letter
-    const filtered = getFilteredUpcoming();
-    
-    filtered.slice(0, 4).forEach(ticket => {
+
+    if (state.upcomingData.length === 0) {
+        list.innerHTML = `
+            <div style="text-align:center; padding: 30px; color: var(--text-muted);">
+                <i class="fas fa-inbox fa-2x" style="margin-bottom:12px; opacity:0.4;"></i>
+                <p>Aucun client en attente</p>
+            </div>`;
+        return;
+    }
+
+    state.upcomingData.slice(0, 6).forEach((ticket, index) => {
         const item = document.createElement('div');
         item.className = 'queue-item';
         item.innerHTML = `
             <div class="ticket-id">${ticket.id}</div>
             <div class="ticket-info">
-                <h5>${ticket.name}</h5>
-                <p>Spécialité: ${agentLetter}</p>
+                <h5>${ticket.name || 'Client'}</h5>
+                <p>${profile.service || SERVICE_KEY}</p>
             </div>
-            <div class="ticket-wait">Attente: ${ticket.time}</div>
+            <div class="ticket-wait">Attente: ${ticket.time || '~' + (index + 1) * 5 + ' min'}</div>
         `;
         list.appendChild(item);
     });
 }
 
-// Initialize
+// ── Live refresh every 5 seconds (picks up new bookings automatically) ────────
+function liveRefresh() {
+    updateStats();
+    renderUpcoming();
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    state = getQueueState();
+
+    // Show current ticket if one was being served
+    if (state.currentTicket) {
+        document.getElementById('current-number').innerText = state.currentTicket.id;
+        document.getElementById('current-name').innerText   = state.currentTicket.name || 'Client';
+    } else {
+        document.getElementById('current-number').innerText = 'A-000';
+        document.getElementById('current-name').innerText   = 'En attente du premier client…';
+    }
+
     updateStats();
     renderUpcoming();
     updateCounterUI(getCounterStatus());
-    
-    if (state.currentTicket) {
-        document.getElementById('current-number').innerText = state.currentTicket.id;
-        document.getElementById('current-name').innerText = state.currentTicket.name;
-    } else {
-        document.getElementById('current-number').innerText = `${agentLetter}-000`;
-        document.getElementById('current-name').innerText = `En attente (Guichet ${agentLetter})...`;
-    }
+
+    // Poll every 5 s so new bookings appear without a page reload
+    setInterval(liveRefresh, 5000);
 });

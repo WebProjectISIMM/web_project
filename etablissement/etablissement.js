@@ -1,53 +1,84 @@
- //filtre 
- function filterList() {
-            let searchInput = document.getElementById('searchInput').value.toLowerCase();
-            let locationFilter = document.getElementById('locationFilter').value;
-            let cards = document.getElementsByClassName('list-item');
+// ── Filter list ──────────────────────────────────────────────────────────────
+function filterList() {
+    let searchInput = document.getElementById('searchInput').value.toLowerCase();
+    let locationFilter = document.getElementById('locationFilter').value;
+    let cards = document.getElementsByClassName('list-item');
 
-            for (let card of cards) {
-                let name = card.getAttribute('data-name').toLowerCase();
-                let location = card.getAttribute('data-location');
+    for (let card of cards) {
+        let name = card.getAttribute('data-name').toLowerCase();
+        let location = card.getAttribute('data-location');
 
-                let matchesSearch = name.includes(searchInput);
-                let matchesLocation = locationFilter === "" || location === locationFilter;
+        let matchesSearch = name.includes(searchInput);
+        let matchesLocation = locationFilter === "" || location === locationFilter;
 
-                if (matchesSearch && matchesLocation) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            }
-        }
-
-function confirmBooking(agencyName, locationName) {
-    alert("Ticket réservé avec succès chez " + agencyName + " !");
-    
-    // Create new ticket object with a unique ID
-    const newTicket = {
-        id: "T-" + Date.now(), // Unique ID based on timestamp
-        agency: agencyName,
-        location: locationName || "Centre Ville", 
-        ticketNumber: "A-" + Math.floor(Math.random() * 90 + 10), 
-        waitTime: "~" + Math.floor(Math.random() * 20 + 5) + " min", 
-        peopleAhead: Math.floor(Math.random() * 10 + 1)
-    };
-    
-    // Get existing tickets or initialize new array
-    let tickets = [];
-    const storageKey = `activeTickets_${USER_ID}`;
-    const savedTickets = localStorage.getItem(storageKey);
-    if (savedTickets) {
-        tickets = JSON.parse(savedTickets);
+        card.style.display = (matchesSearch && matchesLocation) ? "flex" : "none";
     }
-    
-    // Add new ticket and save
-    tickets.push(newTicket);
-    localStorage.setItem(storageKey, JSON.stringify(tickets));
+}
 
+// ── Booking confirmation ──────────────────────────────────────────────────────
+// agencyName   : display name shown on the ticket card
+// locationName : city / branch label
+// serviceKey   : one of 'banque' | 'cinema' | 'resto' | 'administration'
+function confirmBooking(agencyName, locationName, serviceKey) {
+    // ── 1. Create a unique scope key for this specific establishment branch ──
+    const establishmentSlug = agencyName.toLowerCase().replace(/[^a-z0-9]/g, '_');
 
-    // Cleanup old single-ticket key if it exists
-    localStorage.removeItem('activeTicket');
+    // ── 1. Increment the per-service sequential counter ──────────────────────
+    const counterKey = `ticketCounter_${establishmentSlug}`;
+    const currentCount = parseInt(localStorage.getItem(counterKey) || '0') + 1;
+    localStorage.setItem(counterKey, currentCount);
 
-    // Redirect back to profile page
+    const ticketNumber = "A-" + String(currentCount).padStart(3, '0');
+
+    // ── 2. Build the client-facing ticket object ──────────────────────────────
+    const waitTime  = "~" + Math.floor(Math.random() * 20 + 5) + " min";
+    const peopleAhead = currentCount - 1;   // everyone who booked before in this session
+
+    const newTicket = {
+        id:           "T-" + Date.now(),
+        agency:       agencyName,
+        location:     locationName || "Centre Ville",
+        ticketNumber: ticketNumber,
+        waitTime:     waitTime,
+        peopleAhead:  peopleAhead,
+        serviceKey:   serviceKey,
+        establishmentKey: establishmentSlug
+    };
+
+    // ── 3. Save to the client's per-user ticket list ─────────────────────────
+    const clientKey   = `activeTickets_${USER_ID}`;
+    const clientTickets = JSON.parse(localStorage.getItem(clientKey) || '[]');
+    clientTickets.push(newTicket);
+    localStorage.setItem(clientKey, JSON.stringify(clientTickets));
+    localStorage.removeItem('activeTicket'); // cleanup legacy key
+
+    // ── 4. Inject into the agent's service-scoped queue ──────────────────────
+    const agentQueueKey = `agent_queue_state_${establishmentSlug}`;
+    let agentState = JSON.parse(localStorage.getItem(agentQueueKey) || 'null');
+
+    if (!agentState) {
+        // First ticket of the day for this service: seed a fresh state
+        agentState = {
+            currentNum:    0,
+            currentTicket: null,
+            waitingCount:  0,
+            servedCount:   0,
+            upcomingData:  []
+        };
+    }
+
+    // Add queue entry for the agent to call
+    agentState.upcomingData.push({
+        id:   ticketNumber,
+        name: "Client",          // anonymous — no name at booking time
+        time: waitTime,
+        clientTicketId: newTicket.id
+    });
+    agentState.waitingCount = agentState.upcomingData.length;
+
+    localStorage.setItem(agentQueueKey, JSON.stringify(agentState));
+
+    // ── 5. Confirm and redirect ───────────────────────────────────────────────
+    alert(`✅ Ticket ${ticketNumber} réservé avec succès chez ${agencyName} !\n⏱ Temps estimé : ${waitTime}`);
     window.location.href = '../profilClient/ProfilClient.php';
 }
