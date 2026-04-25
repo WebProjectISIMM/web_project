@@ -1,0 +1,89 @@
+/* --- Extensions pour la page Liste des Établissements --- */
+
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search-box input, .filter-box select {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    border-radius: var(--border-radius);
+    border: 1px solid #E0E0E0;
+    outline: none;
+    background: white;
+    appearance: none; /* Enlever le style par défaut du select */
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.list-item {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #eee;
+    transition: 0.3s;
+}
+
+.list-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.item-logo {
+    width: 50px;
+    height: 50px;
+    background: #1A1A1A;
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.item-details h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.item-details p {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.item-details i {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
+
+.btn-select {
+    background: #B2A14E;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-select:hover {
+    background: #ffca28;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQueue - Inscription</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            </div>
+            <div class="logo-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <h1>SmartQueue</h1>
+        </div>
+
+        <div id="signup-form">
+            <h2 id="signup-title">Créer un compte</h2>
+            <p class="subtitle" id="signup-subtitle">Rejoignez la file d'attente intelligente rapidement</p>
+
+            <form action="../register.php" method="POST">
+                <input type="hidden" id="user-role" name="role" value="client">
+                
+                <div class="input-group">
+                    <label>Nom complet</label>
+                    <div class="input-wrapper">
+                        <i class="far fa-user"></i>
+                        <input type="text" name="username" placeholder="Votre nom" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <div class="input-wrapper">
+                        <i class="far fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Adresse Email" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Créer un mot de passe" id="pass-signup" required>
+                        <i class="far fa-eye-slash toggle-password" onclick="togglePass('pass-signup')"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">S'inscrire</button>
+            </form>
+            <p class="footer-text">Déjà inscrit ? <a href="../signin/signin.html">Se connecter</a></p>
+        </div>
+    </div>
+<style>
+    /* Kept some base styles but removed role-tabs related ones */
+</style>
+<script>
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        } else {
+            input.type = "password";
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        }
+    }
+</script>
+
+
+<script src="signup.js"></script>
+<script src="../theme.js"></script>
+</body>
+</html>

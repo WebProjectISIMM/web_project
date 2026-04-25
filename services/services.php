@@ -1,0 +1,65 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../signin/signin.html");
+    exit;
+}
+?>
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartQueue - Services</title>
+    <link rel="stylesheet" href="../signin/signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container-wide">
+        <div class="header">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <i class="fas fa-moon theme-toggle-icon" style="cursor:pointer; font-size: 24px; color: #B2A14E;" onclick="toggleTheme()"></i>
+            </div>
+            <div class="logo-mini">
+                <i class="fas fa-layer-group"></i> <h1>SmartQueue</h1> <!--cette icone vient de la biblio font awesome -->
+            </div>
+            <h2>Quel service souhaitez-vous rejoindre ?</h2>
+            <p class="subtitle">Sélectionnez une catégorie pour prendre votre place</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card" onclick="window.location.href='../etablissement/etablissement.php'">
+                <div class="service-icon"><i class="fas fa-university"></i></div>
+                <h3>Banque</h3>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='../cinema/cinema.php'">
+                <div class="service-icon"><i class="fas fa-film"></i></div>
+                <h3>Cinéma</h3>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='../resto/resto.php'">
+                <div class="service-icon"><i class="fas fa-utensils"></i></div>
+                <h3>Resto U</h3>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='../admin/admin.php'">
+                <div class="service-icon"><i class="fas fa-file-invoice"></i></div>
+                <h3>Administration</h3>
+            </div>
+
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-secondary" onclick="window.history.back()">Retour</button>
+        </div>
+    </div>
+    <script>
+        const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
+    </script>
+    <script src="../theme.js"></script>
+
+</body>
+</html>
