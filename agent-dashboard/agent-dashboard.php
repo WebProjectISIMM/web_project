@@ -186,7 +186,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] === 'client') {
     </main>
 
     <script src="../theme.js"></script>
-    <script src="dashboard-core.js"></script>
-    <script src="agent-dashboard.js"></script>
+    <script src="dashboard-core.js?v=4"></script>
+    <script src="agent-dashboard.js?v=4"></script>
+    <script src="../logout-confirmation.js"></script>
 </body>
 </html>

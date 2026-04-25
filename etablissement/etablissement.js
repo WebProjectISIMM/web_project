@@ -20,65 +20,45 @@ function filterList() {
 // locationName : city / branch label
 // serviceKey   : one of 'banque' | 'cinema' | 'resto' | 'administration'
 function confirmBooking(agencyName, locationName, serviceKey) {
-    // ── 1. Create a unique scope key for this specific establishment branch ──
     const establishmentSlug = agencyName.toLowerCase().replace(/[^a-z0-9]/g, '_');
 
-    // ── 1. Increment the per-service sequential counter ──────────────────────
-    const counterKey = `ticketCounter_${establishmentSlug}`;
-    const currentCount = parseInt(localStorage.getItem(counterKey) || '0') + 1;
-    localStorage.setItem(counterKey, currentCount);
-
-    const ticketNumber = "A-" + String(currentCount).padStart(3, '0');
-
-    // ── 2. Build the client-facing ticket object ──────────────────────────────
-    const waitTime  = "~" + Math.floor(Math.random() * 20 + 5) + " min";
-    const peopleAhead = currentCount - 1;   // everyone who booked before in this session
-
-    const newTicket = {
-        id:           "T-" + Date.now(),
-        agency:       agencyName,
-        location:     locationName || "Centre Ville",
-        ticketNumber: ticketNumber,
-        waitTime:     waitTime,
-        peopleAhead:  peopleAhead,
-        serviceKey:   serviceKey,
-        establishmentKey: establishmentSlug
-    };
-
-    // ── 3. Save to the client's per-user ticket list ─────────────────────────
-    const clientKey   = `activeTickets_${USER_ID}`;
-    const clientTickets = JSON.parse(localStorage.getItem(clientKey) || '[]');
-    clientTickets.push(newTicket);
-    localStorage.setItem(clientKey, JSON.stringify(clientTickets));
-    localStorage.removeItem('activeTicket'); // cleanup legacy key
-
-    // ── 4. Inject into the agent's service-scoped queue ──────────────────────
-    const agentQueueKey = `agent_queue_state_${establishmentSlug}`;
-    let agentState = JSON.parse(localStorage.getItem(agentQueueKey) || 'null');
-
-    if (!agentState) {
-        // First ticket of the day for this service: seed a fresh state
-        agentState = {
-            currentNum:    0,
-            currentTicket: null,
-            waitingCount:  0,
-            servedCount:   0,
-            upcomingData:  []
-        };
-    }
-
-    // Add queue entry for the agent to call
-    agentState.upcomingData.push({
-        id:   ticketNumber,
-        name: "Client",          // anonymous — no name at booking time
-        time: waitTime,
-        clientTicketId: newTicket.id
+    // Send only identity data — the server generates the ticket number,
+    // people_ahead (real queue depth) and wait_time (5 min × people_ahead).
+    fetch('/Web_Project/api/tickets.php?action=create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+            agency:            agencyName,
+            location:          locationName || 'Centre Ville',
+            service_key:       serviceKey,
+            establishment_key: establishmentSlug
+        })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Erreur serveur');
+        return response.json();
+    })
+    .then(data => {
+        console.log('API Response:', data);
+        if (data.success) {
+            const num   = data.ticket_number;
+            const wait  = data.wait_time;
+            const ahead = data.people_ahead;
+            alert(
+                `✅ Ticket ${num} réservé avec succès chez ${agencyName} !\n` +
+                `👥 ${ahead} personne${ahead !== 1 ? 's' : ''} avant vous\n` +
+                `⏱ Temps estimé : ${wait}`
+            );
+            setTimeout(() => {
+                window.location.href = '../profilClient/ProfilClient.php';
+            }, 1000);
+        } else {
+            alert('❌ Erreur: ' + (data.message || 'Impossible de créer le ticket'));
+        }
+    })
+    .catch(error => {
+        console.error('API Error:', error);
+        alert('❌ Erreur de connexion.\n\nVérifiez que vous êtes connecté et réessayez.');
     });
-    agentState.waitingCount = agentState.upcomingData.length;
-
-    localStorage.setItem(agentQueueKey, JSON.stringify(agentState));
-
-    // ── 5. Confirm and redirect ───────────────────────────────────────────────
-    alert(`✅ Ticket ${ticketNumber} réservé avec succès chez ${agencyName} !\n⏱ Temps estimé : ${waitTime}`);
-    window.location.href = '../profilClient/ProfilClient.php';
 }

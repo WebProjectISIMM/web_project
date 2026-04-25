@@ -41,3 +41,27 @@ INSERT INTO users (name, email, password, role, establishment, sector) VALUES
 INSERT INTO users (name, email, password, role, establishment, sector) VALUES 
 ('Directeur Poste Tunis', 'poste_tunis@smartqueue.com', '$2y$12$NIbezcTGUoHIENYeG9dnU.IB16CXmi9btpTfbzBL779rGV2u.F/66', 'main_admin', 'La Poste - Tunis Centre', 'administration'),
 ('Directeur Municipalité Sousse', 'municipalite_sousse@smartqueue.com', '$2y$12$NIbezcTGUoHIENYeG9dnU.IB16CXmi9btpTfbzBL779rGV2u.F/66', 'main_admin', 'Municipalité de Sousse', 'administration');
+
+-- ============================================================
+--  Tickets Table (for queue management)
+-- ============================================================
+DROP TABLE IF EXISTS tickets;
+
+CREATE TABLE tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    ticket_number VARCHAR(20) NOT NULL,
+    agency VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    service_key VARCHAR(50) NOT NULL,
+    establishment_key VARCHAR(255) NOT NULL,
+    wait_time VARCHAR(50),
+    people_ahead INT DEFAULT 0,
+    status ENUM('waiting', 'served', 'cancelled') DEFAULT 'waiting',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    served_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (user_id),
+    INDEX (establishment_key),
+    INDEX (status)
+);

@@ -76,7 +76,7 @@ if (!isset($_SESSION['user_id'])) {
     <script>
         const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
     </script>
-    <script src="../etablissement/etablissement.js?v=2"></script>
+    <script src="../etablissement/etablissement.js?v=4"></script>
     <script src="../theme.js"></script>
 
 </body>
