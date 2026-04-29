@@ -69,8 +69,9 @@ $admin_link = ($_SESSION['user_role'] === 'main_admin') ? '../admin/main-admin-d
     <script>
         const USER_ID = "<?php echo $_SESSION['user_id']; ?>";
     </script>
-    <script src="ProfilClient.js"></script>
+    <script src="ProfilClient.js?v=4"></script>
 
     <script src="../theme.js"></script>
+    <script src="../logout-confirmation.js"></script>
 </body>
 </html>

@@ -135,6 +135,7 @@ if ($logged_in) {
 
         window.dispatchEvent(new Event('scroll'));
     </script>
+    <script src="logout-confirmation.js"></script>
 </body>
 
 </html>

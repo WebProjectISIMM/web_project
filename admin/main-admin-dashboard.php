@@ -30,17 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_admin'])) {
     $stmt->close();
 }
 
-// Handle Admin Promotion — forced to director's establishment
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['promote_user_id'])) {
-    $uid = (int)$_POST['promote_user_id'];
-
-    $stmt = $conn->prepare("UPDATE users SET role='admin', establishment=?, sector=? WHERE id=?");
-    $stmt->bind_param("ssi", $MY_ESTABLISHMENT, $MY_SECTOR, $uid);
-    $stmt->execute();
-    $stmt->close();
-    $message = "Utilisateur promu agent pour {$MY_ESTABLISHMENT}.";
-}
-
 // Handle Revocation — only revoke admins within this establishment
 if (isset($_GET['revoke'])) {
     $uid = (int)$_GET['revoke'];
@@ -50,10 +39,6 @@ if (isset($_GET['revoke'])) {
     $stmt->close();
     $message = "Accès agent révoqué.";
 }
-
-// Fetch all clients (for promotion)
-$result  = $conn->query("SELECT id, name, email FROM users WHERE role='client'");
-$clients = $result->fetch_all(MYSQLI_ASSOC);
 
 // Fetch only admins belonging to THIS specific establishment
 $stmt  = $conn->prepare("SELECT id, name, email, establishment, sector FROM users WHERE role='admin' AND establishment=?");
@@ -301,34 +286,6 @@ $stmt->close();
             </div>
         </div>
 
-        <!-- Section Promotion Clients -->
-        <div class="admin-card" style="margin-top: 40px;">
-            <h3>Promouvoir un Client pour <?php echo htmlspecialchars($MY_ESTABLISHMENT); ?></h3>
-            <p class="subtitle">Sélectionnez un utilisateur enregistré pour lui donner accès au guichet local.</p>
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($clients as $client): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($client['name']); ?></td>
-                        <td><?php echo htmlspecialchars($client['email']); ?></td>
-                        <td>
-                            <button class="btn-promote" onclick="openPromotionModal(<?php echo $client['id']; ?>, '<?php echo htmlspecialchars($client['name']); ?>')">
-                                <i class="fas fa-user-plus"></i> Nommer Admin
-                            </button>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
         <!-- Daily Reset Panel -->
         <div style="margin-top: 40px;">
             <h3 style="margin-bottom: 6px;"><i class="fas fa-calendar-day" style="color:#FF5252; margin-right:10px;"></i>Réinitialisation Journalière</h3>
@@ -353,28 +310,6 @@ $stmt->close();
             </div>
         </div>
     </main>
-
-    <!-- Modal Promotion -->
-    <div id="promoModal" class="modal">
-        <div class="modal-content">
-            <h2 id="modalTitle">Nommer Admin</h2>
-            <form method="POST">
-                <input type="hidden" name="promote_user_id" id="promote_user_id">
-                <div class="input-group" style="opacity: 0.7;">
-                    <label>Établissement</label>
-                    <input type="text" value="<?php echo htmlspecialchars($MY_ESTABLISHMENT); ?>" disabled>
-                </div>
-                <div class="input-group" style="opacity: 0.7;">
-                    <label>Secteur / Service</label>
-                    <input type="text" value="<?php echo $MY_SECTOR_LABEL; ?>" disabled>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn-promote" style="flex: 1;">Confirmer</button>
-                    <button type="button" class="btn-action btn-secondary-white" style="flex: 1;" onclick="closeAllModals()">Annuler</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Modal Create New Admin -->
     <div id="createModal" class="modal">
@@ -410,16 +345,10 @@ $stmt->close();
     <script src="../theme.js"></script>
     <script>
         // ── Modals ─────────────────────────────────────────
-        function openPromotionModal(id, name) {
-            document.getElementById('promote_user_id').value = id;
-            document.getElementById('modalTitle').innerText = "Promouvoir " + name;
-            document.getElementById('promoModal').style.display = 'block';
-        }
         function openCreateModal() {
             document.getElementById('createModal').style.display = 'block';
         }
         function closeAllModals() {
-            document.getElementById('promoModal').style.display = 'none';
             document.getElementById('createModal').style.display = 'none';
         }
         window.onclick = function(event) {

@@ -5,105 +5,120 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderTickets() {
     const ticketContainer = document.getElementById('ticket-container');
     const headerTitle = document.getElementById('ticket-count-text');
-    
-    // Support both old global 'activeTickets' and new user-specific 'activeTickets_ID'
-    let tickets = [];
-    const storageKey = `activeTickets_${USER_ID}`;
-    const savedTickets = localStorage.getItem(storageKey);
-    const oldTicket = localStorage.getItem('activeTicket');
-    const globalTickets = localStorage.getItem('activeTickets');
 
-    if (savedTickets) {
-        tickets = JSON.parse(savedTickets);
-    } else if (globalTickets) {
-        // Migrate global tickets to user-specific if we want, or just clear them.
-        // For independence, let's migrate once then clear global.
-        tickets = JSON.parse(globalTickets);
-        localStorage.setItem(storageKey, JSON.stringify(tickets));
-        localStorage.removeItem('activeTickets');
-    } else if (oldTicket) {
-        // Migrate old single ticket to new array format
-        const ticket = JSON.parse(oldTicket);
-        if (!ticket.id) ticket.id = "T-OLD";
-        tickets.push(ticket);
-        localStorage.setItem(storageKey, JSON.stringify(tickets));
-        localStorage.removeItem('activeTicket');
-    }
-    
-    // Update header text
-    const count = tickets.length;
-    headerTitle.innerHTML = `Vous avez <b>${count} ticket${count !== 1 ? 's' : ''}</b> actif${count !== 1 ? 's' : ''} en ce moment`;
-    
-    if (count > 0) {
-        ticketContainer.innerHTML = ''; // Clear previous content
+    // Fetch tickets from API
+    fetch('/Web_Project/api/tickets.php?action=get-user-tickets', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Erreur serveur');
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.message || 'Erreur lors du chargement des tickets');
+        }
+
+        const tickets = data.tickets || [];
+        const count = tickets.length;
         
-        // Loop through and build HTML for each ticket
-        tickets.forEach(ticket => {
-            const ticketCard = document.createElement('div');
-            ticketCard.className = 'card';
-            ticketCard.style.marginBottom = '20px'; // Add spacing between multiple cards
+        // Update header
+        headerTitle.innerHTML = `Vous avez <b>${count} ticket${count !== 1 ? 's' : ''}</b> actif${count !== 1 ? 's' : ''} en ce moment`;
+
+        if (count > 0) {
+            ticketContainer.innerHTML = '';
             
-            ticketCard.innerHTML = `
-                <div class="card-header">
-                    <div class="logotext-header">
-                        <div class="logo-ticket">${ticket.agency.substring(0, 4)}</div>
-                        <div class="text-header">
-                            <span class="nom-header">${ticket.agency}</span>
-                            <div class="localisation-identif">
-                                <i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i>
-                                <span class="color">${ticket.location}</span>
+            tickets.forEach(ticket => {
+                const ticketCard = document.createElement('div');
+                ticketCard.className = 'card';
+                ticketCard.style.marginBottom = '20px';
+                
+                ticketCard.innerHTML = `
+                    <div class="card-header">
+                        <div class="logotext-header">
+                            <div class="logo-ticket">${(ticket.agency || 'N/A').substring(0, 4)}</div>
+                            <div class="text-header">
+                                <span class="nom-header">${ticket.agency || 'Établissement'}</span>
+                                <div class="localisation-identif">
+                                    <i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i>
+                                    <span class="color">${ticket.location || 'Localisation'}</span>
+                                </div>
                             </div>
                         </div>
+                        <div class="header-right">
+                            <p class="btn-header">en attente..</p>
+                        </div>
                     </div>
-                    <div class="header-right">
-                        <p class="btn-header">en attente..</p>
+                    
+                    <div class="card-middle">
+                        <div class="middle-1">
+                            <p class="text-middle">VOTRE NUMÉRO</p>
+                            <span class="numero-gras">${ticket.ticket_number || 'N/A'}</span>
+                        </div>
+                        <div class="middle-2">
+                            <p class="text-middle">ESTIMATION</p>
+                            <span class="text2-middle">${ticket.wait_time || '~10 min'}</span>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="card-middle">
-                    <div class="middle-1">
-                        <p class="text-middle">VOTRE NUMÉRO</p>
-                        <span class="numero-gras">${ticket.ticketNumber}</span>
+                    
+                    <div class="card-bottom">
+                        <div class="personnes-file">
+                            <i class="fas fa-users" style="color: var(--primary-color);"></i>
+                            <p class="txt">${ticket.people_ahead || 0} personnes avant vous</p>
+                        </div>
+                        <button class="btn-cancel" onclick="cancelSpecificTicket(${ticket.id})">Annuler mon ticket</button>
                     </div>
-                    <div class="middle-2">
-                        <p class="text-middle">ESTIMATION</p>
-                        <span class="text2-middle">${ticket.waitTime}</span>
-                    </div>
-                </div>
-                
-                <div class="card-bottom">
-                    <div class="personnes-file">
-                        <i class="fas fa-users" style="color: var(--primary-color);"></i>
-                        <p class="txt">${ticket.peopleAhead} personnes avant vous</p>
-                    </div>
-                    <button class="btn-cancel" onclick="cancelSpecificTicket('${ticket.id}')">Annuler mon ticket</button>
-                </div>
+                `;
+                ticketContainer.appendChild(ticketCard);
+            });
+        } else {
+            ticketContainer.innerHTML = `
+                <p class="empty-state">Aucun ticket actif. Veuillez prendre un nouveau ticket.</p>
             `;
-            ticketContainer.appendChild(ticketCard);
-        });
-    } else {
-        // No tickets active
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
         ticketContainer.innerHTML = `
-            <p class="empty-state">Aucun ticket actif. Veuillez prendre un nouveau ticket.</p>
+            <div style="padding: 20px; background: #fff3cd; border-radius: 8px; color: #856404;">
+                <i class="fas fa-exclamation-triangle"></i> Erreur lors du chargement des tickets.<br>
+                <small>Veuillez rafraîchir la page.</small>
+            </div>
         `;
-    }
+    });
 }
 
 function cancelSpecificTicket(id) {
     if (confirm("Êtes-vous sûr de vouloir annuler ce ticket ?")) {
-        const storageKey = `activeTickets_${USER_ID}`;
-        let tickets = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        tickets = tickets.filter(t => t.id !== id);
-        localStorage.setItem(storageKey, JSON.stringify(tickets));
-        renderTickets();
+        fetch('/Web_Project/api/tickets.php?action=cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ ticket_id: id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ Ticket annulé avec succès');
+                renderTickets();
+            } else {
+                alert('❌ Erreur: ' + (data.message || 'Impossible d\'annuler le ticket'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ Erreur de connexion');
+        });
     }
 }
 
-// Keep old function for compatibility if called elsewhere without ID
 function cancelTicket() {
-    const storageKey = `activeTickets_${USER_ID}`;
-    const tickets = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    if (tickets.length > 0) {
-        cancelSpecificTicket(tickets[0].id);
+    const ticketContainer = document.getElementById('ticket-container');
+    const buttons = ticketContainer.querySelectorAll('.btn-cancel');
+    if (buttons.length > 0) {
+        buttons[0].click();
     }
 }
